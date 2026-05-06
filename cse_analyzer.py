@@ -43,7 +43,7 @@ LIVE_LIMIT       = 40          # headlines per live source
 RECENT_DAYS      = 180         # "recent" historical window (6 months)
 COMMERCIAL_BANK_SYMBOL = "COMB.N0000"
 COMMERCIAL_BANK_NAME = "Commercial Bank"
-COMMERCIAL_BANK_NEWS_CSV = Path(OUTPUT_DIR) / "cse_news_ALL_2021_2025.csv"
+COMMERCIAL_BANK_NEWS_CSV = Path(OUTPUT_DIR) / "cse_news_ALL_2021_2026.csv"
 
 # Scoring weights
 W_HIST_OLD       = 0.5         # old historical mention

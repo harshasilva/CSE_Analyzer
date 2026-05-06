@@ -12,7 +12,7 @@ import yfinance as yf
 DEFAULT_SYMBOL = "ACL.N0000"
 DEFAULT_COMPANY_NAME = "Commercial Bank"
 OUTPUT_DIR = Path("cse_output")
-NEWS_CSV = OUTPUT_DIR / "cse_news_ALL_2021_2025.csv"
+NEWS_CSV = OUTPUT_DIR / "cse_news_ALL_2021_2026.csv"
 
 COMPANY_SYMBOLS = {
     "commercial bank": "COMB.N0000",
@@ -58,6 +58,12 @@ def fetch_price_history(symbol: str) -> pd.DataFrame:
     try:
         df = yf.download(symbol, period="1y", interval="1d", auto_adjust=True, progress=False)
         if df is not None and not df.empty:
+            if isinstance(df.columns, pd.MultiIndex):
+                close_level = df.columns.get_level_values(0)
+                if "Close" in close_level:
+                    df = df.xs("Close", axis=1, level=0).to_frame(name="Close")
+                else:
+                    df.columns = df.columns.get_level_values(-1)
             df = df.dropna().copy()
             df.index = pd.to_datetime(df.index)
             print(f"[OK] Retrieved {len(df):,} price rows from Yahoo Finance.")
@@ -117,9 +123,12 @@ def classify_event(row: pd.Series):
 
 
 def build_forecast_note(price_df: pd.DataFrame, events: pd.DataFrame) -> str:
-    latest = float(price_df["Close"].iloc[-1])
-    recent_20 = price_df["Close"].tail(20)
-    recent_60 = price_df["Close"].tail(60)
+    close_series = price_df["Close"]
+    if isinstance(close_series, pd.DataFrame):
+        close_series = close_series.squeeze("columns")
+    latest = float(close_series.iloc[-1])
+    recent_20 = close_series.tail(20)
+    recent_60 = close_series.tail(60)
     short_return = (recent_20.iloc[-1] / recent_20.iloc[0] - 1) * 100 if len(recent_20) > 1 else 0.0
     medium_return = (recent_60.iloc[-1] / recent_60.iloc[0] - 1) * 100 if len(recent_60) > 1 else 0.0
 

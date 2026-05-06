@@ -1,17 +1,18 @@
 """
-CSE (Colombo Stock Exchange) — Last 5 Years News Scraper
+CSE (Colombo Stock Exchange) — Last 6 Years News Scraper
 =========================================================
 Fetches all announcement types from the CSE API for the
-last 5 years (2021–2025) and saves:
+last 6 years (2021–2026) and saves:
 
   cse_output/
-  ├── cse_news_ALL_2021_2025.json   ← full structured data
-  ├── cse_news_ALL_2021_2025.csv    ← all years combined (spreadsheet)
+    ├── cse_news_ALL_2021_2026.json   ← full structured data
+    ├── cse_news_ALL_2021_2026.csv    ← all years combined (spreadsheet)
   ├── cse_news_2021.csv
   ├── cse_news_2022.csv
   ├── cse_news_2023.csv
   ├── cse_news_2024.csv
-  └── cse_news_2025.csv
+    ├── cse_news_2025.csv
+    └── cse_news_2026.csv
 
 Usage:
     pip install requests
@@ -37,7 +38,7 @@ BASE_URL = "https://www.cse.lk/api/"
 
 # Range of years to collect
 START_YEAR = 2021
-END_YEAR   = 2025          # inclusive
+END_YEAR   = 2026          # inclusive
 YEARS      = list(range(START_YEAR, END_YEAR + 1))
 
 OUTPUT_DIR = "cse_output"
