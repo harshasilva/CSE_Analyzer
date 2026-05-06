@@ -1,0 +1,19 @@
+CSE Sentiment Model Evaluation
+Total samples: 98
+Accuracy: 0.6000
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    negative     0.0000    0.0000    0.0000         3
+     neutral     0.6364    0.7778    0.7000         9
+    positive     0.5556    0.6250    0.5882         8
+
+    accuracy                         0.6000        20
+   macro avg     0.3973    0.4676    0.4294        20
+weighted avg     0.5086    0.6000    0.5503        20
+
+Confusion Matrix:
+[[0 1 2]
+ [0 7 2]
+ [0 3 5]]
