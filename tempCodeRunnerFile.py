@@ -1,1 +1,1 @@
-stratified_split = None
+stratified_split
