@@ -21,6 +21,21 @@ DEFAULT_OTHER_ROWS = 1500
 DEFAULT_HEADLINES = 10
 DEFAULT_COMPANY = "Commercial Bank"
 DEFAULT_SYMBOL = "COMB.N0000"
+DEFAULT_CHARTS = 1
+
+COMPANY_SYMBOLS = {
+    "commercial bank": "COMB.N0000",
+    "hatton national bank": "HNB.N0000",
+    "sampath bank": "SAMP.N0000",
+    "seylan bank": "SEYB.N0000",
+    "bank of ceylon": "BOC.N0000",
+    "dfcc bank": "DFCC.N0000",
+    "nations trust bank": "NTB.N0000",
+    "pan asia bank": "PABC.N0000",
+    "john keells holdings": "JKH.N0000",
+    "dialog axiata": "DIAL.N0000",
+}
+SYMBOL_COMPANY = {symbol: name for name, symbol in COMPANY_SYMBOLS.items()}
 
 TEXT_COLUMNS = [
     "title",
@@ -47,6 +62,24 @@ def find_news_files() -> list[Path]:
     return [path for path in files if path.is_file()]
 
 
+def resolve_symbol(company_name: str) -> str | None:
+    if not company_name:
+        return None
+    return COMPANY_SYMBOLS.get(company_name.lower().strip())
+
+
+def resolve_company(symbol: str) -> str | None:
+    if not symbol:
+        return None
+    return SYMBOL_COMPANY.get(symbol.strip())
+
+
+def normalize_company_name(raw: str) -> str:
+    if not raw:
+        return ""
+    return " ".join(part.capitalize() for part in raw.split())
+
+
 def pick_date_column(df: pd.DataFrame) -> str | None:
     for col in DATE_COLUMNS:
         if col in df.columns and df[col].notna().any():
@@ -59,8 +92,10 @@ def build_news_text(df: pd.DataFrame) -> pd.Series:
     if not available:
         return pd.Series([""] * len(df), index=df.index)
     text_df = df[available].fillna("").astype(str)
-    text_df = text_df.replace("nan", "")
-    return text_df.bfill(axis=1).iloc[:, 0].str.strip()
+    text_df = text_df.replace(r"^\s*$", pd.NA, regex=True)
+    text_df = text_df.replace("nan", pd.NA)
+    text_df = text_df.bfill(axis=1)
+    return text_df.iloc[:, 0].fillna("").str.strip()
 
 
 def load_news_sources(paths: Iterable[Path]) -> pd.DataFrame:
@@ -160,7 +195,9 @@ def load_company_events(news_df: pd.DataFrame, company_name: str) -> pd.DataFram
 
 
 def build_forecast_note(price_df: pd.DataFrame, events: pd.DataFrame) -> str:
-    close_series = price_df["Close"].squeeze("columns")
+    close_series = price_df["Close"]
+    if isinstance(close_series, pd.DataFrame):
+        close_series = close_series.squeeze("columns")
     latest = float(close_series.iloc[-1])
     recent_20 = close_series.tail(20)
     recent_60 = close_series.tail(60)
@@ -232,6 +269,53 @@ def render_chart(company_name: str, symbol: str, news_df: pd.DataFrame) -> None:
     plt.show()
 
 
+def pick_chart_targets(
+    news_df: pd.DataFrame,
+    count: int,
+    fallback_company: str,
+    fallback_symbol: str,
+    symbols: list[str] | None = None,
+) -> list[tuple[str, str]]:
+    if symbols:
+        targets = []
+        for symbol in symbols:
+            raw_company = resolve_company(symbol) or symbol
+            targets.append((normalize_company_name(raw_company), symbol))
+        return targets
+
+    if count <= 1:
+        return [(fallback_company, fallback_symbol)]
+
+    targets: list[tuple[str, str]] = []
+    if "company" in news_df.columns:
+        company_counts = (
+            news_df["company"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .replace("", pd.NA)
+            .dropna()
+            .value_counts()
+        )
+        for company_name in company_counts.head(count * 2).index:
+            symbol = resolve_symbol(company_name)
+            if symbol:
+                targets.append((company_name, symbol))
+            if len(targets) >= count:
+                break
+
+    if len(targets) < count:
+        for name, symbol in COMPANY_SYMBOLS.items():
+            targets.append((normalize_company_name(name), symbol))
+            if len(targets) >= count:
+                break
+
+    if not targets:
+        targets = [(fallback_company, fallback_symbol)]
+
+    return targets[:count]
+
+
 def run_dashboard(args: argparse.Namespace) -> None:
     print("Loading AI model (finbert). This may take a minute the first time.")
     sentiment_pipeline = pipeline("sentiment-analysis", model="ProsusAI/finbert")
@@ -267,7 +351,16 @@ def run_dashboard(args: argparse.Namespace) -> None:
 
     if not args.skip_chart:
         print("\nGenerating future chart analysis...")
-        render_chart(args.company, args.symbol, news_df)
+        targets = pick_chart_targets(
+            news_df,
+            args.charts,
+            args.company,
+            args.symbol,
+            args.symbols,
+        )
+        for company_name, symbol in targets:
+            print(f"\nChart target: {company_name} ({symbol})")
+            render_chart(company_name, symbol, news_df)
 
 
 def parse_args() -> argparse.Namespace:
@@ -277,6 +370,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--headlines", type=int, default=DEFAULT_HEADLINES)
     parser.add_argument("--company", type=str, default=DEFAULT_COMPANY)
     parser.add_argument("--symbol", type=str, default=DEFAULT_SYMBOL)
+    parser.add_argument(
+        "--symbols",
+        type=lambda raw: [item.strip() for item in raw.split(",") if item.strip()],
+        default=None,
+        help="Comma-separated Yahoo Finance symbols for chart targets",
+    )
+    parser.add_argument("--charts", type=int, default=DEFAULT_CHARTS)
     parser.add_argument("--skip-chart", action="store_true")
     parser.add_argument("--skip-compact", action="store_true")
     return parser.parse_args()
