@@ -173,6 +173,72 @@ def sentiment_bar(pos, neg, neu, width=24):
     if u < 0: u = 0
     return "[" + "+" * p + "-" * n + "." * u + "]"
 
+def normalize_symbol(symbol: str) -> str:
+    base = symbol.split(".", 1)[0].strip().lower()
+    return re.sub(r"[^a-z0-9]+", "", base)
+
+def build_live_company_map(live_rows: list[dict]) -> dict:
+    alias_to_company = {}
+    for canonical, aliases in COMPANY_MAP:
+        alias_to_company[canonical.lower()] = canonical
+        for alias in aliases:
+            alias_to_company[alias.lower()] = canonical
+
+    live_map = {}
+    for row in live_rows:
+        symbol = row.get("symbol", "")
+        base = normalize_symbol(symbol)
+        company = alias_to_company.get(base)
+        if not company:
+            continue
+
+        price = row.get("lastTrade") or row.get("lastTradedPrice")
+        if price is None or price == 0:
+            price = row.get("previousClose", 0.00)
+        change_pct = row.get("percentageChange", 0.00)
+
+        live_map[company] = {
+            "symbol": symbol,
+            "price": float(price) if price is not None else 0.0,
+            "change_pct": float(change_pct) if change_pct is not None else 0.0,
+        }
+
+    return live_map
+
+def fetch_all_shares_live() -> list[dict]:
+    url = "https://www.cse.lk/api/tradeSummary"
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "X-Requested-With": "XMLHttpRequest",
+    }
+    try:
+        response = requests.post(url, json={}, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json().get("reqTradeSummery", [])
+    except Exception as exc:
+        print(f"  [!] Live share fetch failed: {exc}")
+        return []
+
+def print_live_shares_table(data: list[dict] | None = None):
+    data = data or fetch_all_shares_live()
+    if not data:
+        print("\n  LIVE SHARE SNAPSHOT: no data available.")
+        return
+
+    print("\n" + divider("="))
+    print("  LIVE SHARE SNAPSHOT (CSE)")
+    print(divider("="))
+    print(f"  {'Ticker':<12} | {'Price (LKR)':<12} | {'Change %':<10}")
+    print("  " + "-" * 40)
+
+    for share in data:
+        symbol = share.get("symbol", "N/A")
+        price = share.get("lastTrade") or share.get("lastTradedPrice")
+        if price is None or price == 0:
+            price = share.get("previousClose", 0.00)
+        change_pct = share.get("percentageChange", 0.00)
+        print(f"  {symbol:<12} | {price:<12.2f} | {change_pct:<10.2f}")
+
 def future_bias_from_score(score: float) -> tuple[str, str]:
     if score >= 8.0:
         return "Very bullish", "positive earnings, dividends, and expansion news can extend the move"
@@ -677,10 +743,12 @@ def apply_live_sentiment(scores: dict, live_articles: list, live_sentiments: lis
 # STEP 4 — Combined Score & Rank
 # ─────────────────────────────────────────────────────────
 
-def finalise_scores(scores: dict) -> list:
+def finalise_scores(scores: dict, live_map: dict | None = None, only_live: bool = False) -> list:
     """Compute combined score, return sorted list."""
     ranked = []
     for company, d in scores.items():
+        if only_live and (not live_map or company not in live_map):
+            continue
         total_mentions = d["mention_hist"] + d["mention_live"]
         if total_mentions == 0:
             continue
@@ -693,7 +761,7 @@ def finalise_scores(scores: dict) -> list:
 # STEP 5 — Dashboard Print
 # ─────────────────────────────────────────────────────────
 
-def print_dashboard(ranked: list):
+def print_dashboard(ranked: list, live_map: dict | None = None):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     future_engine = build_future_engine(ranked)
 
@@ -709,14 +777,17 @@ def print_dashboard(ranked: list):
         return
 
     print()
-    print(f"  {'#':<4}{'Company':<35}{'Score':>8}  {'Signal':<22}{'Mentions':>10}  {'Sentiment Bar'}")
+    print(f"  {'#':<4}{'Company':<35}{'Score':>8}  {'Signal':<22}{'Mentions':>10}  {'Price':>10}  {'Chg%':>7}  {'Sentiment Bar'}")
     print("  " + "-" * 100)
 
     for i, (company, score, d) in enumerate(ranked, 1):
         total = d["mention_hist"] + d["mention_live"]
         bar   = sentiment_bar(d["positive"], d["negative"], d["neutral"])
         sig   = rating(score)
-        print(f"  {i:<4}{company:<35}{score:>8.2f}  {sig:<22}{total:>10}  {bar}")
+        live = live_map.get(company) if live_map else None
+        price = live["price"] if live else 0.0
+        change = live["change_pct"] if live else 0.0
+        print(f"  {i:<4}{company:<35}{score:>8.2f}  {sig:<22}{total:>10}  {price:>10.2f}  {change:>7.2f}  {bar}")
 
     # Top 5 detail
     print()
@@ -733,9 +804,13 @@ def print_dashboard(ranked: list):
         print(f"\n  #{rank}  {company}")
         print("  " + "-" * 55)
         print(f"  Signal           : {rating(score)}")
+        live = live_map.get(company) if live_map else None
+        price = live["price"] if live else 0.0
+        change = live["change_pct"] if live else 0.0
         print(f"  Combined Score   : {score:+.2f}")
         print(f"  Historical Score : {d['hist_score']:+.2f}  ({d['mention_hist']} CSE records)")
         print(f"  Live News Score  : {d['live_score']:+.2f}  ({d['mention_live']} live headlines)")
+        print(f"  Live Price/Chg%  : {price:.2f} LKR / {change:+.2f}%")
         print(f"  Sentiment Mix    : {pp:.0f}% Pos | {np_:.0f}% Neg | {nu:.0f}% Neutral")
 
         if d["live_mentions"]:
@@ -764,7 +839,10 @@ def print_dashboard(ranked: list):
             print(f"\n  {label}:")
             for c in group:
                 sc = next(s for n, s, _ in ranked if n == c)
-                print(f"    - {c}  ({sc:+.2f})")
+                live = live_map.get(c) if live_map else None
+                price = live["price"] if live else 0.0
+                change = live["change_pct"] if live else 0.0
+                print(f"    - {c}  ({sc:+.2f})  {price:.2f} LKR  {change:+.2f}%")
 
     if not has_any:
         print("\n  All companies in NEUTRAL range today.")
@@ -783,17 +861,22 @@ def print_dashboard(ranked: list):
 # SAVE CSV
 # ─────────────────────────────────────────────────────────
 
-def save_csv(ranked: list):
+def save_csv(ranked: list, live_map: dict | None = None):
     out = os.path.join(OUTPUT_DIR, "cse_prediction_results.csv")
     rows = []
     for company, score, d in ranked:
         total = d["positive"] + d["negative"] + d["neutral"] or 1
+        live = live_map.get(company) if live_map else None
+        price = live["price"] if live else 0.0
+        change = live["change_pct"] if live else 0.0
         rows.append({
             "company":        company,
             "signal":         rating(score).strip(),
             "combined_score": round(score, 3),
             "hist_score":     round(d["hist_score"], 3),
             "live_score":     round(d["live_score"], 3),
+            "live_price":     round(price, 2),
+            "live_change_pct": round(change, 2),
             "hist_mentions":  d["mention_hist"],
             "live_mentions":  d["mention_live"],
             "pct_positive":   round(d["positive"] / total * 100, 1),
@@ -871,11 +954,14 @@ def main():
 
     # ── Rank & display ────────────────────────────────
     print("\n[5/5] Ranking companies and generating report...")
-    ranked = finalise_scores(scores)
-    print_dashboard(ranked)
+    live_rows = fetch_all_shares_live()
+    live_map = build_live_company_map(live_rows)
+    ranked = finalise_scores(scores, live_map=live_map, only_live=True)
+    print_dashboard(ranked, live_map=live_map)
+    print_live_shares_table(live_rows)
 
     # ── Save ──────────────────────────────────────────
-    save_csv(ranked)
+    save_csv(ranked, live_map=live_map)
     save_all_company_dashboards(ranked)
     print("\n  Done!")
 
