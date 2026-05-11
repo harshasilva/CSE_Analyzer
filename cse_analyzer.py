@@ -21,6 +21,7 @@ import sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 import os, glob, re, time, csv
+import contextlib
 from pathlib import Path
 from datetime import datetime, date, timedelta
 from collections import defaultdict
@@ -173,16 +174,27 @@ def sentiment_bar(pos, neg, neu, width=24):
     if u < 0: u = 0
     return "[" + "+" * p + "-" * n + "." * u + "]"
 
+def change_direction(change: float) -> str:
+    if change > 0:
+        return "up"
+    if change < 0:
+        return "down"
+    return "flat"
+
 def normalize_symbol(symbol: str) -> str:
     base = symbol.split(".", 1)[0].strip().lower()
     return re.sub(r"[^a-z0-9]+", "", base)
 
-def build_live_company_map(live_rows: list[dict]) -> dict:
+def build_company_alias_map() -> dict:
     alias_to_company = {}
     for canonical, aliases in COMPANY_MAP:
-        alias_to_company[canonical.lower()] = canonical
+        alias_to_company[normalize_symbol(canonical)] = canonical
         for alias in aliases:
-            alias_to_company[alias.lower()] = canonical
+            alias_to_company[normalize_symbol(alias)] = canonical
+    return alias_to_company
+
+def build_live_company_map(live_rows: list[dict]) -> dict:
+    alias_to_company = build_company_alias_map()
 
     live_map = {}
     for row in live_rows:
@@ -250,6 +262,16 @@ def future_bias_from_score(score: float) -> tuple[str, str]:
         return "Neutral", "new news will decide direction; expect a range until stronger catalysts arrive"
     return "Bearish", "negative announcements or weak results could keep pressure on the chart"
 
+def predicted_change_from_bias(bias: str) -> float:
+    bias_map = {
+        "Very bullish": 1.5,
+        "Bullish": 1.0,
+        "Mildly positive": 0.5,
+        "Neutral": 0.0,
+        "Bearish": -1.0,
+    }
+    return float(bias_map.get(bias, 0.0))
+
 def event_driver_hint(company_data: dict) -> str:
     positive = company_data.get("positive", 0)
     negative = company_data.get("negative", 0)
@@ -292,7 +314,7 @@ def build_future_engine(ranked: list) -> dict:
         "market_state": market_state,
     }
 
-def print_future_engine(future_engine: dict):
+def print_future_engine(future_engine: dict, live_map: dict | None = None):
     rows = future_engine.get("rows", [])
     if not rows:
         print("\n  FUTURE ENGINE: no rows available.")
@@ -318,7 +340,8 @@ def print_future_engine(future_engine: dict):
         print()
         print("  Future leaders to watch:")
         for row in top_future:
-            print(f"    - {row['company']} ({row['future_bias']})")
+            predicted = predicted_change_from_bias(row["future_bias"])
+            print(f"    - {row['company']} ({row['future_bias']}) {predicted:+.2f}%")
 
     print()
     print("  How future news changes the engine:")
@@ -451,7 +474,8 @@ def fetch_commercial_bank_live_price() -> float | None:
 
 def fetch_commercial_bank_price_history() -> pd.DataFrame:
     try:
-        df = yf.download(COMMERCIAL_BANK_SYMBOL, period="1y", interval="1d", auto_adjust=True, progress=False)
+        with contextlib.redirect_stderr(io.StringIO()):
+            df = yf.download(COMMERCIAL_BANK_SYMBOL, period="1y", interval="1d", auto_adjust=True, progress=False)
         if df is not None and not df.empty:
             df = df.dropna().copy()
             df.index = pd.to_datetime(df.index)
@@ -777,7 +801,7 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
         return
 
     print()
-    print(f"  {'#':<4}{'Company':<35}{'Score':>8}  {'Signal':<22}{'Mentions':>10}  {'Price':>10}  {'Chg%':>7}  {'Sentiment Bar'}")
+    print(f"  {'#':<4}{'Company':<35}{'Symbol':<10}{'Score':>8}  {'Signal':<22}{'Mentions':>10}  {'Price':>10}  {'Chg%':>7}  {'Pred%':>7}  {'Sentiment Bar'}")
     print("  " + "-" * 100)
 
     for i, (company, score, d) in enumerate(ranked, 1):
@@ -785,9 +809,12 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
         bar   = sentiment_bar(d["positive"], d["negative"], d["neutral"])
         sig   = rating(score)
         live = live_map.get(company) if live_map else None
+        bias, _ = future_bias_from_score(score)
+        predicted = predicted_change_from_bias(bias)
+        symbol = live["symbol"] if live else ""
         price = live["price"] if live else 0.0
         change = live["change_pct"] if live else 0.0
-        print(f"  {i:<4}{company:<35}{score:>8.2f}  {sig:<22}{total:>10}  {price:>10.2f}  {change:>7.2f}  {bar}")
+        print(f"  {i:<4}{company:<35}{symbol:<10}{score:>8.2f}  {sig:<22}{total:>10}  {price:>10.2f}  {change:>7.2f}  {predicted:>7.2f}  {bar}")
 
     # Top 5 detail
     print()
@@ -804,6 +831,8 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
         print(f"\n  #{rank}  {company}")
         print("  " + "-" * 55)
         print(f"  Signal           : {rating(score)}")
+        bias, _ = future_bias_from_score(score)
+        predicted = predicted_change_from_bias(bias)
         live = live_map.get(company) if live_map else None
         price = live["price"] if live else 0.0
         change = live["change_pct"] if live else 0.0
@@ -811,6 +840,7 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
         print(f"  Historical Score : {d['hist_score']:+.2f}  ({d['mention_hist']} CSE records)")
         print(f"  Live News Score  : {d['live_score']:+.2f}  ({d['mention_live']} live headlines)")
         print(f"  Live Price/Chg%  : {price:.2f} LKR / {change:+.2f}%")
+        print(f"  1D Predicted %   : {predicted:+.2f}% ({bias})")
         print(f"  Sentiment Mix    : {pp:.0f}% Pos | {np_:.0f}% Neg | {nu:.0f}% Neutral")
 
         if d["live_mentions"]:
@@ -839,10 +869,12 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
             print(f"\n  {label}:")
             for c in group:
                 sc = next(s for n, s, _ in ranked if n == c)
+                bias, _ = future_bias_from_score(sc)
+                predicted = predicted_change_from_bias(bias)
                 live = live_map.get(c) if live_map else None
                 price = live["price"] if live else 0.0
                 change = live["change_pct"] if live else 0.0
-                print(f"    - {c}  ({sc:+.2f})  {price:.2f} LKR  {change:+.2f}%")
+                print(f"    - {c}  ({sc:+.2f})  {price:.2f} LKR  {change:+.2f}%  {predicted:+.2f}%")
 
     if not has_any:
         print("\n  All companies in NEUTRAL range today.")
@@ -854,8 +886,25 @@ def print_dashboard(ranked: list, live_map: dict | None = None):
     print("  Always consult a licensed financial advisor before investing.")
     print(divider("="))
 
+    live_companies = [
+        (company, score, d)
+        for company, score, d in ranked
+        if d.get("mention_live", 0) > 0
+    ]
+    if live_companies:
+        print()
+        print(divider("="))
+        print("  LIVE NEWS CHANGE COMPANY")
+        print(divider("="))
+        print(f"  {'Company':<35}{'Live News':>10}{'Pred %':>9}  {'Signal'}")
+        print("  " + "-" * 70)
+        for company, score, d in live_companies:
+            bias, _ = future_bias_from_score(score)
+            predicted = predicted_change_from_bias(bias)
+            print(f"  {company:<35}{d['mention_live']:>10}{predicted:>9.2f}  {rating(score)}")
+
     print(commercial_bank_snapshot())
-    print_future_engine(future_engine)
+    print_future_engine(future_engine, live_map=live_map)
 
 # ─────────────────────────────────────────────────────────
 # SAVE CSV
@@ -866,6 +915,8 @@ def save_csv(ranked: list, live_map: dict | None = None):
     rows = []
     for company, score, d in ranked:
         total = d["positive"] + d["negative"] + d["neutral"] or 1
+        bias, _ = future_bias_from_score(score)
+        predicted = predicted_change_from_bias(bias)
         live = live_map.get(company) if live_map else None
         price = live["price"] if live else 0.0
         change = live["change_pct"] if live else 0.0
@@ -877,6 +928,7 @@ def save_csv(ranked: list, live_map: dict | None = None):
             "live_score":     round(d["live_score"], 3),
             "live_price":     round(price, 2),
             "live_change_pct": round(change, 2),
+            "predicted_change_pct": round(predicted, 2),
             "hist_mentions":  d["mention_hist"],
             "live_mentions":  d["mention_live"],
             "pct_positive":   round(d["positive"] / total * 100, 1),
@@ -957,6 +1009,7 @@ def main():
     live_rows = fetch_all_shares_live()
     live_map = build_live_company_map(live_rows)
     ranked = finalise_scores(scores, live_map=live_map, only_live=True)
+    alias_to_company = build_company_alias_map()
     print_dashboard(ranked, live_map=live_map)
     print_live_shares_table(live_rows)
 
