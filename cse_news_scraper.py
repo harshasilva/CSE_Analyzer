@@ -20,6 +20,8 @@ import time
 import os
 from datetime import datetime, date
 
+from cse_common import parse_cse_date
+
 # ─────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────
@@ -92,37 +94,9 @@ ENDPOINTS = [
 # DATE PARSING
 # ─────────────────────────────────────────────
 
-# Common date formats used in CSE API responses
-DATE_FORMATS = [
-    "%Y-%m-%d",
-    "%d/%m/%Y",
-    "%d-%m-%Y",
-    "%Y/%m/%d",
-    "%d %b %Y",
-    "%d %B %Y",
-    "%Y-%m-%dT%H:%M:%S",
-    "%Y-%m-%d %H:%M:%S",
-    "%d/%m/%Y %H:%M:%S",
-]
-
 def parse_date(value):
-    """Try multiple date formats and return a date object or None."""
-    if not value:
-        return None
-    value = str(value).strip()
-    for fmt in DATE_FORMATS:
-        try:
-            return datetime.strptime(value[:len(fmt)], fmt).date()
-        except (ValueError, TypeError):
-            continue
-    # Try just extracting a 4-digit year
-    for part in value.split():
-        if part.isdigit() and len(part) == 4:
-            try:
-                return date(int(part), 1, 1)
-            except ValueError:
-                pass
-    return None
+    """Parse a CSE date. A bare year is not treated as 1 January."""
+    return parse_cse_date(value)
 
 def get_date_from_item(item):
     """Try common date field names to find a date in an announcement item."""

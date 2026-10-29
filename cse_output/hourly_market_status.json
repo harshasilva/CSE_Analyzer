@@ -1,0 +1,18 @@
+{
+  "updated_at": "2026-10-30T01:13:01+05:30",
+  "notes": [
+    "CSE API saved 288 listed symbols, 2019 trade rows, 2 market days.",
+    "Daily charts already include 2026-10-29. Live board saved for 288 symbols.",
+    "BBC World: 12 headlines.",
+    "Google markets: 12 headlines.",
+    "Google Sri Lanka: 12 headlines.",
+    "Google Sri Lanka economy: 12 headlines.",
+    "EconomyNext: 12 headlines.",
+    "Ada Derana: 12 headlines.",
+    "Google CSE: 12 headlines.",
+    "CSE announcements in the last two days: 0.",
+    "Saved 38 economy and market headlines. Left out 46 unrelated items.",
+    "New headlines added to the training archive: 0."
+  ],
+  "forecast": "C:\\Users\\lap.lk\\Desktop\\CSE\\cse_output\\cse_market_all_forecast.csv"
+}

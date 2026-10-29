@@ -1,15 +1,15 @@
-from datetime import datetime
 from pathlib import Path
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import requests
 import yfinance as yf
 
+from cse_common import extract_trade_price
 
-DEFAULT_SYMBOL = "ACL.N0000"
+
+DEFAULT_SYMBOL = "COMB.N0000"
 DEFAULT_COMPANY_NAME = "Commercial Bank"
 OUTPUT_DIR = Path("cse_output")
 NEWS_CSV = OUTPUT_DIR / "cse_news_ALL_2021_2026.csv"
@@ -40,12 +40,14 @@ def fetch_live_price(symbol: str):
     try:
         url = "https://www.cse.lk/api/tradeSummary"
         headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.post(url, data={"symbol": symbol}, headers=headers, timeout=10)
+        response = requests.post(url, json={}, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
         for item in data.get("reqTradeSummery", []):
-            if item.get("symbol") == symbol and item.get("price"):
-                price = float(item["price"])
+            if item.get("symbol") != symbol:
+                continue
+            price = extract_trade_price(item)
+            if price is not None:
                 print(f"[OK] Live price: {price:.2f} LKR")
                 return price
     except Exception as exc:
@@ -54,9 +56,17 @@ def fetch_live_price(symbol: str):
 
 
 def fetch_price_history(symbol: str) -> pd.DataFrame:
-    print(f"Fetching 1-year price history for {symbol}...")
+    from fetch_market_history import load_history_frame, to_yahoo
+
+    local = load_history_frame(symbol)
+    if local is not None and not local.empty:
+        print(f"[OK] Loaded {len(local):,} real daily rows for {symbol} from data/market.")
+        return local
+
+    yahoo = to_yahoo(symbol)
+    print(f"Fetching 5-year price history for {symbol} ({yahoo})...")
     try:
-        df = yf.download(symbol, period="1y", interval="1d", auto_adjust=True, progress=False)
+        df = yf.download(yahoo, period="5y", interval="1d", auto_adjust=True, progress=False)
         if df is not None and not df.empty:
             if isinstance(df.columns, pd.MultiIndex):
                 close_level = df.columns.get_level_values(0)
@@ -71,13 +81,8 @@ def fetch_price_history(symbol: str) -> pd.DataFrame:
     except Exception as exc:
         print(f"[!] Price history fetch failed: {exc}")
 
-    print("[!] Falling back to synthetic history anchored to the live price.")
-    live_price = fetch_live_price(symbol) or 100.0
-    dates = pd.date_range(end=datetime.today(), periods=252, freq="B")
-    np.random.seed(42)
-    random_walk = np.random.randn(252).cumsum()
-    prices = random_walk - random_walk[-1] + live_price
-    return pd.DataFrame({"Close": prices}, index=dates)
+    print("[!] No price history available. A random series is not used as a forecast.")
+    return pd.DataFrame(columns=["Close"])
 
 
 def load_company_events(company_name: str) -> pd.DataFrame:
@@ -181,6 +186,13 @@ def main() -> None:
     print(f"\n{company_name} chart analysis for {symbol}\n")
 
     price_df = fetch_price_history(symbol)
+    if price_df.empty:
+        live_price = fetch_live_price(symbol)
+        if live_price is not None:
+            print(f"Live price is {live_price:.2f} LKR, but there is no history to chart.")
+        else:
+            print("No price data available for this symbol.")
+        return
     events = load_company_events(company_name)
 
     fig, ax = plt.subplots(figsize=(14, 7))

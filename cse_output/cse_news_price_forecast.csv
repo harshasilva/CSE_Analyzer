@@ -1,0 +1,6 @@
+symbol,company,as_of,last_close,predicted_change_pct,predicted_next_close,direction,up_probability,ann_sent_5d,world_sent_5d,company_sent_5d
+DIAL.N0000,Dialog Axiata,2026-10-29,44.3,0.662,44.59,unclear,0.547,0.0,0.109,0.667
+COMB.N0000,Commercial Bank,2026-10-29,199.5,0.844,201.18,up,0.575,0.0,0.109,0.0
+HNB.N0000,Hatton National Bank,2026-10-29,382.75,0.979,386.5,up,0.651,0.0,0.109,0.0
+JKH.N0000,John Keells Holdings,2026-10-29,18.1,1.018,18.28,unclear,0.477,0.0,0.109,0.0
+SAMP.N0000,Sampath Bank,2026-10-29,142.5,0.894,143.77,unclear,0.496,0.0,0.109,0.0

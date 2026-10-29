@@ -18,7 +18,8 @@ Requirements:
 """
 
 import sys, io
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+if getattr(sys.stdout, "encoding", "").lower() not in {"utf-8", "utf8"} and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 import os, glob, re, time, csv
 import contextlib
@@ -28,12 +29,12 @@ from collections import defaultdict
 
 import requests
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-from bs4 import BeautifulSoup
 import yfinance as yf
 from transformers import pipeline
+
+from cse_common import extract_trade_price, parse_cse_date
 
 # ─────────────────────────────────────────────────────────
 # CONFIG
@@ -56,26 +57,6 @@ W_LIVE_POS       = 5.0         # live positive sentiment
 W_LIVE_NEG       = -4.0        # live negative sentiment
 W_LIVE_NEU       = 0.5         # live neutral mention (at least active)
 
-LIVE_SOURCES = [
-    {
-        "name":    "Adaderana Biz",
-        "url":     "https://bizenglish.adaderana.lk/",
-        "tags":    ["h4", "h3", "h2"],
-        "headers": {"User-Agent": "Mozilla/5.0"},
-    },
-    {
-        "name":    "Daily FT Business",
-        "url":     "https://www.ft.lk/business/34",
-        "tags":    ["h3", "h4"],
-        "headers": {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130"},
-    },
-    {
-        "name":    "Economy Next",
-        "url":     "https://economynext.com/",
-        "tags":    ["h3", "h4"],
-        "headers": {"User-Agent": "Mozilla/5.0"},
-    },
-]
 
 # Canonical company list — (canonical_name, [aliases/tickers])
 COMPANY_MAP = [
@@ -129,10 +110,18 @@ COMPANY_MAP = [
     ("Kelani Valley",               ["kelani valley"]),
 ]
 
-# Pre-build lowercase regex per company
+# Short English words that also appear as tickers. They stay in the symbol map
+# below, but they are not used when scanning headline text.
+TEXT_ALIAS_BLOCKLIST = {"sun", "tile", "dial", "pap", "dist"}
+
+def _text_aliases(aliases: list[str]) -> list[str]:
+    kept = [alias for alias in aliases if alias.lower() not in TEXT_ALIAS_BLOCKLIST]
+    return kept or list(aliases)
+
 _COMPANY_PATTERNS = [
     (canonical, re.compile(
-        r"\b(" + "|".join(re.escape(a) for a in aliases) + r")\b", re.IGNORECASE
+        r"\b(" + "|".join(re.escape(alias) for alias in _text_aliases(aliases)) + r")\b",
+        re.IGNORECASE,
     ))
     for canonical, aliases in COMPANY_MAP
 ]
@@ -151,11 +140,19 @@ def divider(char="=", width=70):
     return char * width
 
 def extract_companies(text: str) -> list:
-    """Return list of canonical company names found in text."""
-    found = []
-    tl = text.lower()
+    """Return canonical company names. A longer name wins over a shorter overlap."""
+    matches = []
     for canonical, pattern in _COMPANY_PATTERNS:
-        if pattern.search(tl):
+        for match in pattern.finditer(text or ""):
+            matches.append((match.start(), match.end(), canonical))
+    matches.sort(key=lambda item: (-(item[1] - item[0]), item[0]))
+    taken = []
+    found = []
+    for start, end, canonical in matches:
+        if any(not (end <= used_start or start >= used_end) for used_start, used_end in taken):
+            continue
+        taken.append((start, end))
+        if canonical not in found:
             found.append(canonical)
     return found
 
@@ -458,37 +455,50 @@ def save_all_company_dashboards(ranked: list):
     print("  Each PNG is a separate visual dashboard for one CSE share.")
     print(divider("="))
 
+def _close_frame(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame(columns=["Close"])
+    if isinstance(df.columns, pd.MultiIndex):
+        if "Close" in df.columns.get_level_values(0):
+            df = df.xs("Close", axis=1, level=0).to_frame(name="Close")
+        else:
+            df.columns = df.columns.get_level_values(-1)
+    if "Close" not in df.columns:
+        return pd.DataFrame(columns=["Close"])
+    close = df["Close"]
+    if isinstance(close, pd.DataFrame):
+        close = close.squeeze("columns")
+    out = close.to_frame(name="Close").dropna()
+    out.index = pd.to_datetime(out.index)
+    return out
+
 def fetch_commercial_bank_live_price() -> float | None:
-    try:
-        url = "https://www.cse.lk/api/tradeSummary"
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.post(url, data={"symbol": COMMERCIAL_BANK_SYMBOL}, headers=headers, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        for item in data.get("reqTradeSummery", []):
-            if item.get("symbol") == COMMERCIAL_BANK_SYMBOL and item.get("price"):
-                return float(item["price"])
-    except Exception:
-        pass
+    for item in fetch_all_shares_live():
+        if item.get("symbol") == COMMERCIAL_BANK_SYMBOL:
+            return extract_trade_price(item)
     return None
 
 def fetch_commercial_bank_price_history() -> pd.DataFrame:
+    from fetch_market_history import load_history_frame, to_yahoo
+
+    local = load_history_frame(COMMERCIAL_BANK_SYMBOL)
+    if local is not None and not local.empty and "Close" in local.columns:
+        return local[["Close"]].dropna()
     try:
         with contextlib.redirect_stderr(io.StringIO()):
-            df = yf.download(COMMERCIAL_BANK_SYMBOL, period="1y", interval="1d", auto_adjust=True, progress=False)
-        if df is not None and not df.empty:
-            df = df.dropna().copy()
-            df.index = pd.to_datetime(df.index)
-            return df
+            df = yf.download(
+                to_yahoo(COMMERCIAL_BANK_SYMBOL),
+                period="5y",
+                interval="1d",
+                auto_adjust=True,
+                progress=False,
+            )
+        frame = _close_frame(df)
+        if not frame.empty:
+            return frame
     except Exception:
         pass
-
-    live_price = fetch_commercial_bank_live_price() or 100.0
-    dates = pd.date_range(end=datetime.today(), periods=252, freq="B")
-    np.random.seed(42)
-    random_walk = np.random.randn(252).cumsum()
-    prices = random_walk - random_walk[-1] + live_price
-    return pd.DataFrame({"Close": prices}, index=dates)
+    return pd.DataFrame(columns=["Close"])
 
 def load_commercial_bank_events() -> pd.DataFrame:
     if not COMMERCIAL_BANK_NEWS_CSV.exists():
@@ -531,6 +541,15 @@ def classify_commercial_bank_event(row: pd.Series):
 def commercial_bank_snapshot() -> str:
     price_df = fetch_commercial_bank_price_history()
     events = load_commercial_bank_events()
+    if price_df.empty or "Close" not in price_df.columns:
+        return "\n".join([
+            "",
+            divider("="),
+            f"  {COMMERCIAL_BANK_NAME} SNAPSHOT",
+            divider("="),
+            "  Price history is unavailable, so no price forecast is shown.",
+            divider("="),
+        ])
 
     latest = float(price_df["Close"].iloc[-1])
     recent_20 = price_df["Close"].tail(20)
@@ -636,44 +655,32 @@ def analyse_historical(hist_df: pd.DataFrame) -> dict:
             continue
 
         # Determine date
-        rec_date = None
-        date_str = row.get("_parsed_date", "")
-        if pd.notna(date_str) and date_str:
-            try:
-                rec_date = datetime.strptime(str(date_str)[:10], "%Y-%m-%d").date()
-            except Exception:
-                pass
+        rec_date = parse_cse_date(row.get("_parsed_date", ""))
 
         is_recent = rec_date is not None and rec_date >= cutoff
         category  = str(row.get("_category", ""))
         tl        = text.lower()
 
-        # Determine signal weight for this record
         base_weight = W_HIST_RECENT if is_recent else W_HIST_OLD
-        signal_score = base_weight  # default: positive mention signal
+        signal_score = base_weight
+        bucket = "neutral"
 
-        # Override for special categories
         if category in NEGATIVE_CATEGORIES:
             signal_score = W_COMPLIANCE_NEG
-            signal_label = "Non-compliance"
+            bucket = "negative"
         elif any(kw in tl for kw in IPO_KEYWORDS):
             signal_score = W_IPO_SIGNAL if is_recent else W_IPO_SIGNAL * 0.5
-            signal_label = "IPO/New Listing"
+            bucket = "positive"
         elif any(kw in tl for kw in FINANCIAL_KEYWORDS):
             signal_score = W_FINANCIAL if is_recent else W_FINANCIAL * 0.5
-            signal_label = "Financial Results"
-        else:
-            signal_label = "Activity"
+            bucket = "positive"
+        elif category in POSITIVE_CATEGORIES:
+            bucket = "positive"
 
         for c in companies:
             scores[c]["hist_score"]    += signal_score
             scores[c]["mention_hist"]  += 1
-            if signal_score > 0:
-                scores[c]["positive"] += 1
-            elif signal_score < 0:
-                scores[c]["negative"] += 1
-            else:
-                scores[c]["neutral"]  += 1
+            scores[c][bucket] += 1
 
     return dict(scores)
 
@@ -682,33 +689,24 @@ def analyse_historical(hist_df: pd.DataFrame) -> dict:
 # ─────────────────────────────────────────────────────────
 
 def scrape_live_news() -> list:
+    """Latest Sri Lanka business headlines from the EconomyNext and LBO APIs."""
+    print("  Fetching Sri Lanka business news from the news APIs ...")
+    from fetch_business_news import fetch_articles
+
+    try:
+        fetched, notes = fetch_articles()
+    except Exception as exc:
+        print(f"    [!] Error: {exc}")
+        return []
+    for note in notes:
+        print(f"    {note}")
     articles = []
-    for src in LIVE_SOURCES:
-        print(f"  Fetching: {src['name']} ...")
-        try:
-            resp = requests.get(src["url"], headers=src["headers"], timeout=20)
-            if resp.status_code != 200:
-                print(f"    [!] HTTP {resp.status_code}")
-                continue
-            soup = BeautifulSoup(resp.text, "html.parser")
-            seen, count = set(), 0
-            for tag_name in src["tags"]:
-                for tag in soup.find_all(tag_name):
-                    text = tag.get_text(strip=True)
-                    if len(text) > 40 and text not in seen:
-                        seen.add(text)
-                        link_tag = tag.find("a") or tag.find_parent("a")
-                        url = ""
-                        if link_tag and link_tag.get("href"):
-                            url = link_tag["href"]
-                        articles.append({"source": src["name"], "text": text, "url": url})
-                        count += 1
-                if count >= LIVE_LIMIT:
-                    break
-            print(f"    OK: {count} headlines")
-        except Exception as e:
-            print(f"    [!] Error: {e}")
-        time.sleep(1.0)
+    for item in fetched[: LIVE_LIMIT * 3]:
+        text = item["title"]
+        if item.get("excerpt"):
+            text = f"{item['title']}. {item['excerpt']}"
+        articles.append({"source": item["source"], "text": text, "url": item["url"]})
+    print(f"    OK: {len(articles)} headlines")
     return articles
 
 # ─────────────────────────────────────────────────────────
@@ -1008,8 +1006,7 @@ def main():
     print("\n[5/5] Ranking companies and generating report...")
     live_rows = fetch_all_shares_live()
     live_map = build_live_company_map(live_rows)
-    ranked = finalise_scores(scores, live_map=live_map, only_live=True)
-    alias_to_company = build_company_alias_map()
+    ranked = finalise_scores(scores, live_map=live_map, only_live=bool(live_map))
     print_dashboard(ranked, live_map=live_map)
     print_live_shares_table(live_rows)
 

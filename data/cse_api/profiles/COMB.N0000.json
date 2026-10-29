@@ -1,0 +1,138 @@
+{
+  "infoCompanyDirector": [
+    {
+      "directorId": 11352,
+      "firstName": "J. (Non-Executive / Independent Director)",
+      "lastName": "Lee",
+      "description": null
+    },
+    {
+      "directorId": 12003,
+      "firstName": "D.L.T.S. (Non Executive / Independent Director)",
+      "lastName": "Wijewardena",
+      "description": null
+    },
+    {
+      "directorId": 13305,
+      "firstName": "S. (Independent/Non-Executive Director)",
+      "lastName": "Dr.  Selliah",
+      "description": null
+    },
+    {
+      "directorId": 14380,
+      "firstName": "D N L (Independent /Non-Executive Director)",
+      "lastName": "Fernando",
+      "description": null
+    },
+    {
+      "directorId": 14644,
+      "firstName": "P. M. (Independent /Non-Executive Director)",
+      "lastName": "Kumarasinghe",
+      "description": null
+    },
+    {
+      "directorId": 16124,
+      "firstName": "Y. (Independent Non-Executive Director)",
+      "lastName": "Perera",
+      "description": null
+    },
+    {
+      "directorId": 17058,
+      "firstName": "R.(Non Executive / Independent Director)",
+      "lastName": " Parakrama",
+      "description": null
+    },
+    {
+      "directorId": 17972,
+      "firstName": "L.H. (Non-independent, Executive Director)",
+      "lastName": "Munasinghe",
+      "description": null
+    },
+    {
+      "directorId": 18295,
+      "firstName": "S.S.P.K. (Independent, Non-Executive Director)",
+      "lastName": "Jassim",
+      "description": null
+    }
+  ],
+  "reqArticlePDF": [
+    {
+      "id": 265,
+      "title": null,
+      "body": null,
+      "securityId": 369,
+      "manualDate": 1455733800000,
+      "addedDate": 1455733800000,
+      "edited": 1,
+      "deleted": 0,
+      "filePath": "uploadAssociationFiles/1411455774468_369.pdf"
+    }
+  ],
+  "reqComSumInfo": [
+    {
+      "securityId": 369,
+      "registerOffice": "\"Commercial House\", No.21, Sir Razik Fareed Mawatha, P.O.Box 856, Colombo 01",
+      "tel1": "0112486000-5, 4486000, 7486000, 5486000",
+      "name": "COMMERCIAL BANK OF CEYLON PLC",
+      "symbol": "COMB",
+      "fax": "011-2449889",
+      "email1": "info@combank.net",
+      "web": "www.combank.lk",
+      "established": "1969",
+      "quarterDate": "1970-01-01",
+      "finYearEnd": "2",
+      "capital": null,
+      "authorized": null,
+      "issued": null,
+      "secretaries": "Mr R. A. Pramith Rajapaksha / Commercial Bank of Ceylon PLC.\" Commercial House\" No.21, Sir razik Fareed MW, P.O. Box 856, Colombo 01.",
+      "registeredOffice": "\"Commercial House\", No.21, Sir Razik Fareed Mawatha, P.O.Box 856, Colombo 01",
+      "auditors": "Messrs KPMG",
+      "natureOfbussinesId": null,
+      "sector": "Banks",
+      "boardType": "Main Board"
+    }
+  ],
+  "reqTagsLogo": {
+    "id": 453,
+    "path": "upload_tag_logo/hcybewAqye4OqEPa_1Mar2026061049GMT_1772345449832.png"
+  },
+  "reqLogo": {
+    "id": 3164,
+    "path": "upload_logo/328m7MwB2CexSgiJ_3Jan2024051241GMT_1704258761020.jpeg",
+    "secId": 369
+  },
+  "infoCompanyKeyExecutive": [],
+  "topPosts": [
+    {
+      "directorId": 18435,
+      "firstName": "M. M. S. (Non-Executive / Independent Director)",
+      "lastName": "Muhseen",
+      "designationOther": "Chairman"
+    },
+    {
+      "directorId": 18436,
+      "firstName": "R. (Non-Executive / Independent director)",
+      "lastName": "Senanayake",
+      "designationOther": "Deputy Chairman"
+    },
+    {
+      "directorId": 18437,
+      "firstName": "S. ",
+      "lastName": "Manatunge",
+      "designationOther": "Managing Director / Chief Executive Officer"
+    }
+  ],
+  "reqBlockAd": [
+    {
+      "id": 259,
+      "path": "upload_add/816.jpeg"
+    }
+  ],
+  "infoCompanyBusinessSummary": [
+    {
+      "summeryId": 269,
+      "title": "Nature of Business",
+      "body": "Commercial Banking"
+    }
+  ]
+}

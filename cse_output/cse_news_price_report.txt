@@ -1,0 +1,62 @@
+CSE next-session price model
+
+This model replaces the old sentiment classifier and the single-stock random forest.
+It predicts the percent change from one close to the next close.
+The test period is the later part of the price history. Those days were not used for training.
+
+Prices: 6309 rows, 2021-10-29 to 2026-10-29
+Dated announcements used: 469
+Dated world headlines used: 12030
+Dated Sri Lanka headlines used: 2554
+Dated stock-market headlines used: 123
+Headlines that name one of the five stocks: 164
+World headlines with no date, kept out of training: 43
+Sessions with an official ASPI return: 239
+Financial reports placed on a later session: 172
+Where the ASPI chart has no row, the index return uses the other stocks' move that day.
+Beta, foreign holding, and today's market ratios are saved with each download. They are not copied onto older sessions.
+Split or bad-print days removed: 1
+
+Train: 4888 rows, 2021-11-26 to 2025-10-22
+Test:  1242 rows, 2025-10-23 to 2026-10-28
+
+Average miss on the test period: 0.918 percentage points
+Average miss if the model always says 0: 0.826 percentage points
+Direction accuracy: 56.7%
+Direction accuracy of 'same way as yesterday': 52.7%
+Direction accuracy of always guessing the common side: 59.7%
+
+The size of the predicted move was less accurate than assuming the price does not change.
+The direction call did not clearly beat always guessing the more common side.
+A one-day move is mostly noise. Judge the model by the test numbers above, not by the latest call.
+
+Features that mattered most on the test period:
+  mkt_ret_1: 0.0156
+  ret_20: 0.0101
+  listings_5d: 0.0085
+  volume_ratio: 0.0072
+  ret_5: 0.0061
+  ret_10: 0.0061
+  ret_1: 0.0055
+  lanka_count_5d: 0.0053
+
+Next session after the last saved close.
+
+Dialog Axiata: last close 44.30 on 2026-10-29, next session unclear (+0.662%, up probability 55%)
+Commercial Bank: last close 199.50 on 2026-10-29, next session up (+0.844%, up probability 57%)
+Hatton National Bank: last close 382.75 on 2026-10-29, next session up (+0.979%, up probability 65%)
+John Keells Holdings: last close 18.10 on 2026-10-29, next session unclear (+1.018%, up probability 48%)
+Sampath Bank: last close 142.50 on 2026-10-29, next session unclear (+0.894%, up probability 50%)
+
+Latest undated business headlines and their tone:
+  [positive] Adaderana Biz: Sri Lanka’s Competitive Edge: Intellectual Property Rights and the Power of Geographical Indications
+  [negative] EconomyNext: Giving priority to state in Sri Lanka bankruptcy law questioned
+  [negative] EconomyNext: Sri Lanka rupee closes weaker to dollar; bond yields flat
+  [negative] EconomyNext: Sri Lanka rupee closes weaker to dollar; bond yields down
+  [positive] EconomyNext: EU-backed initiative boosts Sri Lanka’s green bond market
+  [positive] EconomyNext: Sri Lanka stocks rise in midday trade, ASPI gains 1-pct
+  [negative] EconomyNext: Sri Lanka rupee weaker to dollar; bond yields steady
+  [positive] EconomyNext: Sri Lanka, Pakistan look to boost trade with private sector ties
+
+A next-day stock move is mostly noise. Use the test accuracy above, not the headline forecast, to judge the model.
+This is a research model, not a trading instruction.

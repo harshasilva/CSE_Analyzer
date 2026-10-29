@@ -1,0 +1,117 @@
+{
+  "infoCompanyDirector": [
+    {
+      "directorId": 13921,
+      "firstName": "S. (Independent, Non-Executive Director)",
+      "lastName": "Coorey",
+      "description": null
+    },
+    {
+      "directorId": 14747,
+      "firstName": "K.(Non-Independent/Non-Executive Director)",
+      "lastName": "Balakrishnan",
+      "description": null
+    },
+    {
+      "directorId": 15394,
+      "firstName": "T. (Non-Independent/Non-Executive Director)",
+      "lastName": "Hundt",
+      "description": null
+    },
+    {
+      "directorId": 16092,
+      "firstName": "V. (Independent Non-Executive Director)",
+      "lastName": "Govindasamy",
+      "description": null
+    },
+    {
+      "directorId": 17982,
+      "firstName": "A. (Independent, Non-executive Director)",
+      "lastName": "Herath",
+      "description": null
+    },
+    {
+      "directorId": 18213,
+      "firstName": "T. ( Non-Independent, Non-Executive Director)",
+      "lastName": "Kumar",
+      "description": null
+    },
+    {
+      "directorId": 18315,
+      "firstName": "N. R. K. N. I. (Non-Independent/Non-Executive Director)",
+      "lastName": "Kamil",
+      "description": null
+    }
+  ],
+  "reqArticlePDF": [
+    {
+      "id": 167,
+      "title": null,
+      "body": null,
+      "securityId": 389,
+      "manualDate": 1429813800000,
+      "addedDate": 1429813800000,
+      "edited": 1,
+      "deleted": 0,
+      "filePath": "uploadAssociationFiles/211429868710_389.pdf"
+    }
+  ],
+  "reqComSumInfo": [
+    {
+      "securityId": 389,
+      "registerOffice": "475, Union Place, Colombo 02",
+      "tel1": "0777 887 887",
+      "name": "DIALOG AXIATA PLC",
+      "symbol": "DIAL",
+      "fax": null,
+      "email1": "ir@dialog.lk ",
+      "web": "www.dialog.lk",
+      "established": "1993",
+      "quarterDate": "2005-07-28",
+      "finYearEnd": "2",
+      "capital": null,
+      "authorized": null,
+      "issued": null,
+      "secretaries": "Viranthi Nalinka Attygalle Address :546/7, Galle Road, Colombo 03 TEL:112573894",
+      "registeredOffice": "475, Union Place, Colombo 02",
+      "auditors": "Deloitte Partners",
+      "natureOfbussinesId": null,
+      "sector": "Telecommunication Services",
+      "boardType": "Main Board"
+    }
+  ],
+  "reqTagsLogo": null,
+  "reqLogo": {
+    "id": 2081,
+    "path": "upload_logo/389_1601452556.jpeg",
+    "secId": 389
+  },
+  "infoCompanyKeyExecutive": [],
+  "topPosts": [
+    {
+      "directorId": 7483,
+      "firstName": "S. (Executive Director)",
+      "lastName": "Weerasinghe",
+      "designationOther": "Group Chief Executive Officer"
+    },
+    {
+      "directorId": 11135,
+      "firstName": "N.P. (Non-Independent/Non-Executive Director)",
+      "lastName": "Lau ",
+      "designationOther": "Chairman "
+    }
+  ],
+  "reqBlockAd": [
+    {
+      "id": 783,
+      "path": "upload_add/27.jpeg"
+    }
+  ],
+  "infoCompanyBusinessSummary": [
+    {
+      "summeryId": 701,
+      "title": "Nature of Business",
+      "body": "Provision of mobile telephony services, internet services and external gateway operations."
+    }
+  ]
+}

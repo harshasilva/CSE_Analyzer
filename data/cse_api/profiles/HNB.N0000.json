@@ -1,0 +1,132 @@
+{
+  "infoCompanyDirector": [
+    {
+      "directorId": 10480,
+      "firstName": "T. K. D. A. P. (Non Executive / Non Independent Director) ",
+      "lastName": "Samarasinghe",
+      "description": null
+    },
+    {
+      "directorId": 11258,
+      "firstName": "D. (Non-Executive Independent Director)",
+      "lastName": "Cooray",
+      "description": null
+    },
+    {
+      "directorId": 12981,
+      "firstName": "R. (Non-Executive / Independent Director)",
+      "lastName": "Gunawardana",
+      "description": null
+    },
+    {
+      "directorId": 16517,
+      "firstName": "D. C A. (Independent Non Executive Director)",
+      "lastName": "Goonatilleke",
+      "description": null
+    },
+    {
+      "directorId": 17900,
+      "firstName": "P.D.V.P.K. (Independent/Non-Executive Director)",
+      "lastName": "De Almeida",
+      "description": null
+    },
+    {
+      "directorId": 18035,
+      "firstName": "M. A. (Independent / Non Executive Director)",
+      "lastName": "Jafferjee",
+      "description": null
+    },
+    {
+      "directorId": 18036,
+      "firstName": "R. (Independent/Non Executive Director)",
+      "lastName": "Rajapaksa",
+      "description": null
+    },
+    {
+      "directorId": 18037,
+      "firstName": "L. M (Non Independent / Non Executive Director)",
+      "lastName": "Lokuwithana",
+      "description": null
+    },
+    {
+      "directorId": 18093,
+      "firstName": "P. C. (Independent/Non-Executive Director)",
+      "lastName": "Dodanwela",
+      "description": null
+    }
+  ],
+  "reqArticlePDF": [
+    {
+      "id": 2176,
+      "title": null,
+      "body": "Article",
+      "securityId": 373,
+      "manualDate": null,
+      "addedDate": 1745519400000,
+      "edited": null,
+      "deleted": 0,
+      "filePath": "cmt/uploadAssociationFiles/GYO5ffIaBAba79xq_25Apr2025044549GMT_1745556349733.pdf"
+    }
+  ],
+  "reqComSumInfo": [
+    {
+      "securityId": 373,
+      "registerOffice": "479, T. B. Jayah Mawatha, P.O.Box 837, Colombo 10.",
+      "tel1": "011 - 2664664,011 - 4764764",
+      "name": "HATTON NATIONAL BANK PLC",
+      "symbol": "HNB",
+      "fax": null,
+      "email1": "moreinfo@hnb.net",
+      "web": "www.hnb.lk",
+      "established": "1970",
+      "quarterDate": "1971-01-01",
+      "finYearEnd": "2",
+      "capital": null,
+      "authorized": null,
+      "issued": null,
+      "secretaries": "Ms Shiromi Halloluwa",
+      "registeredOffice": "479, T. B. Jayah Mawatha, P.O.Box 837, Colombo 10.",
+      "auditors": "M/s Ernst & Young",
+      "natureOfbussinesId": null,
+      "sector": "Banks ",
+      "boardType": "Main Board"
+    }
+  ],
+  "reqTagsLogo": {
+    "id": 462,
+    "path": "upload_tag_logo/EkGy1JMzgkaUpkFM_18Mar2026064546GMT_1773816346634.jpeg"
+  },
+  "reqLogo": {
+    "id": 3025,
+    "path": "upload_logo/q5ADDCBJcSu1tpSc_16May2023081336GMT_1684224816035.jpeg",
+    "secId": 373
+  },
+  "infoCompanyKeyExecutive": [],
+  "topPosts": [
+    {
+      "directorId": 15564,
+      "firstName": "D.",
+      "lastName": "Pallewatte",
+      "designationOther": " Managing Director/Chief Executive Officer"
+    },
+    {
+      "directorId": 15677,
+      "firstName": "S. K. (Independent Non Executive Director)",
+      "lastName": "Shah",
+      "designationOther": "Chairman"
+    }
+  ],
+  "reqBlockAd": [
+    {
+      "id": 265,
+      "path": "upload_add/924.jpeg"
+    }
+  ],
+  "infoCompanyBusinessSummary": [
+    {
+      "summeryId": 273,
+      "title": "Nature of Business",
+      "body": "Banking, Development finance, Mortgage financing, Lease financing, Investment Banking, Corporate Finance, Insurance Services, Share Broking & Other Financial Services."
+    }
+  ]
+}

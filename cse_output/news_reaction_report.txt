@@ -1,0 +1,61 @@
+How CSE prices moved after each headline
+
+World headlines are a sample of up to about 100 stories a week. Sri Lanka and stock-market headlines are collected by month.
+Each headline is matched to the next Colombo session that could still react to it.
+Stories seen before 14:30 Colombo use that session. Later stories use the next session.
+The change is from the previous close to that session's close. The five-session change uses the same starting close.
+A busy news day is not allowed to count more than a quiet day when the model is fit.
+The historical averages below use the training years only.
+
+Headline rows used: 73398
+World rows: 58600
+Sri Lanka rows: 12367
+Stock-market rows: 2431
+Train: 59592 headline-stock rows, 2021-11-01 to 2025-10-16
+Test:  13806 headline-stock rows, 1202 stock-sessions, 2025-10-17 to 2026-10-29
+
+Average miss on the next session: 0.850 percentage points
+Average miss if the move is always called 0: 0.823 percentage points
+Average miss if each headline uses the old average for its region and tone: 0.858 percentage points
+Direction accuracy on the test sessions: 60.1%
+Direction accuracy of always guessing the more common side: 60.1%
+
+On an ordinary training session, with the headline ignored, the average move was +0.12%.
+The averages below are the actual price change after that kind of headline. Compare them with the ordinary session.
+The direction call did not beat always guessing the more common side.
+The size of the predicted move was less accurate than assuming the price does not change.
+
+Average next-session move after each kind of training headline with at least 30 rows:
+  Stock market neutral: next session +0.10%, five sessions +0.15%, 1845 rows
+  Sri Lanka negative: next session -0.09%, five sessions -0.51%, 1321 rows
+  Sri Lanka neutral: next session +0.12%, five sessions +0.45%, 8453 rows
+  Sri Lanka positive: next session +0.12%, five sessions +0.36%, 812 rows
+  World negative: next session +0.06%, five sessions +0.48%, 11811 rows
+  World neutral: next session +0.15%, five sessions +0.69%, 30760 rows
+  World positive: next session +0.18%, five sessions +0.70%, 4584 rows
+
+Topic groups with at least 40 training rows and the largest average move:
+  Sri Lanka neutral conflict: next session +1.20%, 70 rows
+  World positive crisis: next session +0.68%, 145 rows
+  World negative conflict: next session -0.66%, 110 rows
+  Sri Lanka neutral rupee: next session +0.62%, 200 rows
+  Sri Lanka neutral oil: next session -0.59%, 45 rows
+  Sri Lanka positive politics: next session -0.55%, 40 rows
+  Sri Lanka positive imf: next session +0.52%, 70 rows
+  Sri Lanka negative imf: next session +0.50%, 75 rows
+  Sri Lanka negative inflation: next session +0.48%, 50 rows
+  World negative politics: next session +0.48%, 95 rows
+  Sri Lanka negative rates: next session +0.40%, 55 rows
+  Sri Lanka negative politics: next session +0.40%, 105 rows
+
+Latest saved headlines, scored from the average move after similar training headlines:
+  Commercial Bank: next session +0.17% (up chance 42%), five sessions +0.55%
+  Dialog Axiata: next session +0.17% (up chance 36%), five sessions +0.55%
+  Hatton National Bank: next session +0.17% (up chance 42%), five sessions +0.55%
+  John Keells Holdings: next session +0.17% (up chance 41%), five sessions +0.53%
+  Sampath Bank: next session +0.17% (up chance 42%), five sessions +0.55%
+
+A one-day stock move is mostly noise. Read the test miss above before using a forecast.
+The full headline-by-headline price changes are in data/news_reactions.csv.
+The averages are in cse_output/news_reaction_patterns.csv.
+This is a research model, not a trading instruction.

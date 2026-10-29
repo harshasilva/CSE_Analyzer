@@ -1,0 +1,49 @@
+Hourly news and CSE price reaction
+Fri 30 Oct 2026, 01:05 Colombo
+
+Research only. Not a trading instruction.
+
+BBC World: 12 headlines.
+Google markets: 12 headlines.
+Google Sri Lanka: 12 headlines.
+Google Sri Lanka economy: 12 headlines.
+EconomyNext: 12 headlines.
+Ada Derana: 12 headlines.
+Google CSE: 12 headlines.
+CSE announcements in the last two days: 0.
+
+Expected move from the last close, using the average price change after similar old headlines:
+  Commercial Bank: next session +0.18%, about 199.86 LKR from 199.50 on 2026-10-29. Five sessions +0.59%. Headlines used: 21.
+  Dialog Axiata: next session +0.18%, about 44.38 LKR from 44.30 on 2026-10-29. Five sessions +0.59%. Headlines used: 21.
+  Hatton National Bank: next session +0.18%, about 383.43 LKR from 382.75 on 2026-10-29. Five sessions +0.59%. Headlines used: 21.
+  John Keells Holdings: next session +0.18%, about 18.13 LKR from 18.10 on 2026-10-29. Five sessions +0.59%. Headlines used: 21.
+  Sampath Bank: next session +0.18%, about 142.75 LKR from 142.50 on 2026-10-29. Five sessions +0.59%. Headlines used: 21.
+
+Headlines used this hour:
+  [Sri Lanka] neutral. after similar old news the next session averaged +0.62% (200 rows, Sri Lanka neutral rupee news)
+    EconomyNext: Sri Lanka rupee closes at 332.55/65 to US dollar spot 1 week, bond yields steady
+  [Sri Lanka] neutral. after similar old news the next session averaged +0.62% (200 rows, Sri Lanka neutral rupee news)
+    EconomyNext: Sri Lanka suffers foreign selling in rupee bonds after three weekly buying
+  [World] negative. after similar old news the next session averaged +0.48% (95 rows, World negative politics news)
+    BBC World: Flávio Bolsonaro calls himself 'leader of Brazil' after election loss
+  [World] neutral. after similar old news the next session averaged +0.20% (335 rows, World neutral conflict news)
+    BBC World: Russian drone attack on Ukrainian train station kills at least 14, officials say
+  [World] neutral. after similar old news the next session averaged +0.20% (8750 rows, World neutral rates news)
+    RV PRO: Federal Reserve Leaves Rates Unchanged, Awaits More Information
+  [World] neutral. after similar old news the next session averaged +0.20% (8750 rows, World neutral rates news)
+    www.tokenpost.com: Federal Reserve Holds Rates at 3.75% to 4% in 10-2 Vote
+  [World] neutral. after similar old news the next session averaged +0.20% (8750 rows, World neutral rates news)
+    BBC: What is happening with US interest rates and the economy?
+  [World] neutral. after similar old news the next session averaged +0.20% (8750 rows, World neutral rates news)
+    weareiowa.com: Federal Reserve holds interest rates steady for now
+  [World] neutral. after similar old news the next session averaged +0.20% (8750 rows, World neutral rates news)
+    WFXB: Federal Reserve Decides To Hold Interest Rates Steady
+  [World] neutral. after similar old news the next session averaged +0.15% (30760 rows, World neutral news)
+    LiteFinance: Oil (USCrude) Price Forecast for Today, Tomorrow, Next Week, and Next 30 Days
+  [World] neutral. after similar old news the next session averaged +0.15% (30760 rows, World neutral news)
+    富途牛牛: HK Stock Market Barometer | Revisiting the September 24 Rall... - Futubull Community
+  [World] neutral. after similar old news the next session averaged +0.15% (30760 rows, World neutral news)
+    U.S. News - Money: How Treasury Yields Affect the Stock Market - U.S. News
+
+The model was trained on reactions from 2021-11-01 to 2025-10-16 and tested on 2025-10-17 to 2026-10-29.
+On those later sessions it got the direction right 60% of the time. Always guessing the common side scored 60%. Average miss 0.85 percentage points, versus 0.82 for a flat call.

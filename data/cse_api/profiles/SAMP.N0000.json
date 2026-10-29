@@ -1,0 +1,149 @@
+{
+  "infoCompanyDirector": [
+    {
+      "directorId": 10345,
+      "firstName": "A. (Non-Executive Independent Director)",
+      "lastName": "Nanayakkara",
+      "description": null
+    },
+    {
+      "directorId": 11240,
+      "firstName": "C.V. (Non-Executive Independent Director)",
+      "lastName": "Kulatilaka",
+      "description": null
+    },
+    {
+      "directorId": 11450,
+      "firstName": "R.K. (Non-Executive, Independent Director)",
+      "lastName": "Jayawardena",
+      "description": null
+    },
+    {
+      "directorId": 11490,
+      "firstName": "D A de V. (Executive Director)",
+      "lastName": "Gunasekara",
+      "description": null
+    },
+    {
+      "directorId": 11856,
+      "firstName": "V. K. (Non-Executive, Independent Director)",
+      "lastName": "Hirdaramani",
+      "description": null
+    },
+    {
+      "directorId": 13565,
+      "firstName": "H.A. (Non-Executive, Independent)",
+      "lastName": "Cabraal",
+      "description": null
+    },
+    {
+      "directorId": 15539,
+      "firstName": "R.K. (Non-Executive, Independent Director)",
+      "lastName": "Modder",
+      "description": null
+    },
+    {
+      "directorId": 17983,
+      "firstName": "P.D.R. (Non-Executive, Independent Director)",
+      "lastName": "Hettiaratchi",
+      "description": null
+    },
+    {
+      "directorId": 18458,
+      "firstName": "Y.S.H.H.K (Non-Executive, Non-Independent Director)",
+      "lastName": "Silva",
+      "description": null
+    }
+  ],
+  "reqArticlePDF": [
+    {
+      "id": 1476,
+      "title": null,
+      "body": "Article",
+      "securityId": 431,
+      "manualDate": null,
+      "addedDate": 1689013800000,
+      "edited": null,
+      "deleted": 0,
+      "filePath": "cmt/uploadAssociationFiles/NgtK5Q0GW8nEXetd_11Jul2023040837GMT_1689048517043.pdf"
+    },
+    {
+      "id": 1474,
+      "title": null,
+      "body": null,
+      "securityId": 431,
+      "manualDate": -19800000,
+      "addedDate": 1689013800000,
+      "edited": 1,
+      "deleted": 0,
+      "filePath": "cmt/uploadAssociationFiles/1671689048467_431."
+    }
+  ],
+  "reqComSumInfo": [
+    {
+      "securityId": 431,
+      "registerOffice": "110,Sir James Peiris Mawatha,Colombo 02.",
+      "tel1": "011-4730630, 011-5331441",
+      "name": "SAMPATH BANK PLC",
+      "symbol": "SAMP",
+      "fax": "011-2303085",
+      "email1": "oper.mgr@sampath.lk",
+      "web": "www.sampath.lk",
+      "established": "1986",
+      "quarterDate": "1987-06-10",
+      "finYearEnd": "2",
+      "capital": null,
+      "authorized": null,
+      "issued": null,
+      "secretaries": "Mr. Reginold Lasantha Senaka Senaratne",
+      "registeredOffice": "110,Sir James Peiris Mawatha,Colombo 02.",
+      "auditors": "Messrs.KPMG, Chartered Accountants",
+      "natureOfbussinesId": null,
+      "sector": "Banks ",
+      "boardType": "Main Board"
+    }
+  ],
+  "reqTagsLogo": {
+    "id": 436,
+    "path": "upload_tag_logo/TZcCsSljAmoUGuoo_26Feb2026162244GMT_1772122964817.png"
+  },
+  "reqLogo": {
+    "id": 2111,
+    "path": "upload_logo/431_1601463036.jpeg",
+    "secId": 431
+  },
+  "infoCompanyKeyExecutive": [],
+  "topPosts": [
+    {
+      "directorId": 4749,
+      "firstName": "S.H. (Non-Executive/ Independent Director)",
+      "lastName": "Amarasekera",
+      "designationOther": "Chairman"
+    },
+    {
+      "directorId": 9636,
+      "firstName": "D.K.D.S. (Non-Executive, Independent Director)",
+      "lastName": "Wijeyeratne",
+      "designationOther": "Deputy Chairman"
+    },
+    {
+      "directorId": 16903,
+      "firstName": "S.D.P. ",
+      "lastName": "Gunawardana",
+      "designationOther": "Managing Director / Chief Executive Officer "
+    }
+  ],
+  "reqBlockAd": [
+    {
+      "id": 288,
+      "path": "upload_add/979.jpeg"
+    }
+  ],
+  "infoCompanyBusinessSummary": [
+    {
+      "summeryId": 321,
+      "title": "Nature of Business ",
+      "body": "Commercial Banking."
+    }
+  ]
+}

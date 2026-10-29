@@ -1,0 +1,6 @@
+symbol,company,as_of,price,price_source,today_change_pct,predicted_change_pct,predicted_next,up_probability,outlook,action,buy_limit,sell_limit,api_beta,foreign_pct,off_52w_high_pct
+HNB.N0000,Hatton National Bank,2026-10-29,382.75,live,2.134756504336224,0.979,386.5,0.651,GOOD,BUY,382.75,386.5,0.55,,-16.8
+COMB.N0000,Commercial Bank,2026-10-29,199.5,live,0.25125628140703515,0.844,201.18,0.575,GOOD,BUY,199.5,201.18,0.79,,-15.2
+DIAL.N0000,Dialog Axiata,2026-10-29,44.3,live,1.839080459770115,0.662,44.59,0.547,UNCLEAR,WAIT,43.86,44.74,1.4,,-11.2
+SAMP.N0000,Sampath Bank,2026-10-29,142.5,live,2.3339317773788153,0.894,143.77,0.496,UNCLEAR,WAIT,141.07,143.93,0.68,,-14.7
+JKH.N0000,John Keells Holdings,2026-10-29,18.1,live,1.6853932584269662,1.018,18.28,0.477,UNCLEAR,WAIT,17.92,18.28,1.0,,-22.6

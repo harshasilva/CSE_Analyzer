@@ -1,0 +1,43 @@
+CSE hourly market update
+Fri 30 Oct 2026, 01:13 Colombo
+
+Research only. Not a trading instruction.
+
+CSE: Market Closed
+ASPI 20,267.15 (+1.49%)
+S&P SL20 5,773.92 (+1.43%)
+
+CSE API saved 288 listed symbols, 2019 trade rows, 2 market days.
+Daily charts already include 2026-10-29. Live board saved for 288 symbols.
+BBC World: 12 headlines.
+Google markets: 12 headlines.
+Google Sri Lanka: 12 headlines.
+Google Sri Lanka economy: 12 headlines.
+EconomyNext: 12 headlines.
+Ada Derana: 12 headlines.
+Google CSE: 12 headlines.
+CSE announcements in the last two days: 0.
+Saved 38 economy and market headlines. Left out 46 unrelated items.
+New headlines added to the training archive: 0.
+
+Forecast for 185 symbols over the next 5 sessions.
+Median predicted change: +3.98%.
+Called higher: 182.
+
+Largest predicted gains:
+  HAYC.N0000 HAYCARB PLC: 202.75 -> +7.35% (up probability 91%)
+  HEXP.N0000 HAYLEYS FIBRE PLC: 139.25 -> +7.19% (up probability 75%)
+  RAL.N0000 RENUKA AGRI FOODS PLC: 9.6 -> +6.59% (up probability 81%)
+  GEST.N0000 GESTETNER OF CEYLON PLC: 291.5 -> +6.39% (up probability 87%)
+  LUMX.N0000 LUMINEX PLC: 7.3 -> +6.08% (up probability 86%)
+  CONN.N0000 HAYLEYS LEISURE PLC: 22.9 -> +5.92% (up probability 89%)
+  LDEV.N0000 LANKEM DEVELOPMENTS PLC: 15.7 -> +5.76% (up probability 88%)
+  LITE.N0000 LAXAPANA PLC: 41.3 -> +5.68% (up probability 89%)
+
+Largest predicted declines:
+  SHL.N0000 SOFTLOGIC HOLDINGS PLC: 7.1 -> -3.99% (up probability 30%)
+  KPHL.N0000 KAPRUKA HOLDINGS PLC: 17.7 -> -1.34% (up probability 40%)
+  AFS.N0000 ALPHA FIRE SERVICES PLC: 23.0 -> -1.12% (up probability 39%)
+
+Full forecast: C:\Users\lap.lk\Desktop\CSE\cse_output\cse_market_all_forecast.csv
+Model report: C:\Users\lap.lk\Desktop\CSE\cse_output\cse_market_all_report.txt

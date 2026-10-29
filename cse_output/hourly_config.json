@@ -1,0 +1,6 @@
+{
+  "weekdays_only": false,
+  "start_hour": 0,
+  "end_hour": 24,
+  "send_always": true
+}

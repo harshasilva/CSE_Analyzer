@@ -1,0 +1,50 @@
+{
+  "fetched_at": "2026-10-30T00:36:55+05:30",
+  "source": "https://www.cse.lk/api/",
+  "listed_symbols": 288,
+  "today_trades": 2019,
+  "daily_market_rows": 2,
+  "indexes": {
+    "ASPI": {
+      "rows": 240,
+      "from": "2025-11-04",
+      "to": "2026-10-29"
+    }
+  },
+  "share_history": {
+    "COMB.N0000": {
+      "rows": 242,
+      "from": "2025-10-30",
+      "to": "2026-10-28",
+      "close": 199.5
+    },
+    "SAMP.N0000": {
+      "rows": 242,
+      "from": "2025-10-30",
+      "to": "2026-10-28",
+      "close": 142.5
+    },
+    "HNB.N0000": {
+      "rows": 242,
+      "from": "2025-10-30",
+      "to": "2026-10-28",
+      "close": 382.75
+    },
+    "JKH.N0000": {
+      "rows": 242,
+      "from": "2025-10-30",
+      "to": "2026-10-28",
+      "close": 18.1
+    },
+    "DIAL.N0000": {
+      "rows": 242,
+      "from": "2025-10-30",
+      "to": "2026-10-28",
+      "close": 44.3
+    }
+  },
+  "company_quotes": 288,
+  "profiles": 5,
+  "financial_reports": 510,
+  "note": "Share charts use period 5, the longest range this API returns (about one year). Prices older than that remain in data/cse_prices_5y.csv."
+}

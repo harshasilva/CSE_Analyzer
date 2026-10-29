@@ -1,0 +1,111 @@
+{
+  "infoCompanyDirector": [
+    {
+      "directorId": 5701,
+      "firstName": "A.(Non Independent Non-Executive Director) ",
+      "lastName": "Cabraal",
+      "description": null
+    },
+    {
+      "directorId": 14240,
+      "firstName": "S. A. (Independent Non-Executive Director)",
+      "lastName": "Coorey",
+      "description": null
+    },
+    {
+      "directorId": 14847,
+      "firstName": "D.V.R.S. (Senior Independent Director)",
+      "lastName": "Fernando",
+      "description": null
+    },
+    {
+      "directorId": 15790,
+      "firstName": "H. M. A. (Independent Non-Executive Director)",
+      "lastName": "Jayesinghe",
+      "description": null
+    },
+    {
+      "directorId": 15791,
+      "firstName": "R. (Independent Non-Executive Director)",
+      "lastName": "Shukla",
+      "description": null
+    },
+    {
+      "directorId": 16900,
+      "firstName": "M.K. (Independent, Non-Executive Director)",
+      "lastName": "Menon",
+      "description": null
+    }
+  ],
+  "reqArticlePDF": [
+    {
+      "id": 1981,
+      "title": null,
+      "body": "Article",
+      "securityId": 508,
+      "manualDate": null,
+      "addedDate": 1728498600000,
+      "edited": null,
+      "deleted": 0,
+      "filePath": "cmt/uploadAssociationFiles/20GuWou4iifdwam0_10Oct2024072225GMT_1728544945376.pdf"
+    }
+  ],
+  "reqComSumInfo": [
+    {
+      "securityId": 508,
+      "registerOffice": "117, Sir Chittampalam A Gardiner Mawatha, Colombo 02.",
+      "tel1": "011- 2306000",
+      "name": "JOHN KEELLS HOLDINGS PLC",
+      "symbol": "JKH",
+      "fax": "011-2447087",
+      "email1": "jkh@keells.com",
+      "web": "www.keells.com",
+      "established": "1979",
+      "quarterDate": "1986-10-23",
+      "finYearEnd": "1",
+      "capital": null,
+      "authorized": null,
+      "issued": null,
+      "secretaries": "Keells Consultants (Private) Ltd.",
+      "registeredOffice": "117, Sir Chittampalam A Gardiner Mawatha, Colombo 02.",
+      "auditors": "Messrs. Ernst & Young,",
+      "natureOfbussinesId": null,
+      "sector": "Capital Goods",
+      "boardType": "Main Board"
+    }
+  ],
+  "reqTagsLogo": null,
+  "reqLogo": {
+    "id": 3567,
+    "path": "upload_logo/dzfJJcujeDHnGn8j_27Dec2025052535GMT_1766813135197.jpeg",
+    "secId": 508
+  },
+  "infoCompanyKeyExecutive": [],
+  "topPosts": [
+    {
+      "directorId": 1105,
+      "firstName": "K. (Chief Executive Officer/Executive Director)",
+      "lastName": "Balendra",
+      "designationOther": "Chairman "
+    },
+    {
+      "directorId": 7310,
+      "firstName": "J.G.A. (Group Finance Director/Executive Director) ",
+      "lastName": "Cooray",
+      "designationOther": "Deputy Chairman"
+    }
+  ],
+  "reqBlockAd": [
+    {
+      "id": 861,
+      "path": "upload_add/508837.jpeg"
+    }
+  ],
+  "infoCompanyBusinessSummary": [
+    {
+      "summeryId": 722,
+      "title": " ",
+      "body": "Travel & tourism, stock broking, banking, insurance, property development, real estate management, soft drinks, ice creams, processed meats, supermarketing, bunkering services & operation of a container terminal at the port of Colombo, freight forwarding, software and office automation solutions, BPO, tea & rubber broking   "
+    }
+  ]
+}

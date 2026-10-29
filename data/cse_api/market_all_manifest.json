@@ -1,0 +1,14 @@
+{
+  "fetched_at": "2026-10-30T00:55:22+05:30",
+  "source": "https://www.cse.lk/api/companyChartDataByStock",
+  "period": "5",
+  "listed_symbols": 288,
+  "charts_downloaded": 283,
+  "charts_skipped_fresh": 5,
+  "charts_failed": [],
+  "history_rows": 67806,
+  "history_symbols": 288,
+  "today": "C:\\Users\\lap.lk\\Desktop\\CSE\\data\\cse_market_all_today.csv",
+  "history": "C:\\Users\\lap.lk\\Desktop\\CSE\\data\\cse_market_all.csv",
+  "note": "Period 5 is the longest daily range the CSE chart API returns, about one year."
+}

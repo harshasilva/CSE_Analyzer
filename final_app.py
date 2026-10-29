@@ -1,20 +1,19 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import yfinance as yf
 from transformers import pipeline
 
+from cse_common import select_news_files
+
 OUTPUT_DIR = Path("cse_output")
 COMPACT_DIR = OUTPUT_DIR / "compact"
-NEWS_GLOB = "cse_news_*.csv"
 
 DEFAULT_NEWS_ROWS = 300
 DEFAULT_OTHER_ROWS = 1500
@@ -58,8 +57,7 @@ DATE_COLUMNS = [
 
 
 def find_news_files() -> list[Path]:
-    files = sorted(OUTPUT_DIR.glob(NEWS_GLOB))
-    return [path for path in files if path.is_file()]
+    return select_news_files(OUTPUT_DIR)
 
 
 def resolve_symbol(company_name: str) -> str | None:
@@ -155,7 +153,14 @@ def write_compact_outputs(news_df: pd.DataFrame, max_news_rows: int, max_other_r
 
 
 def fetch_price_history(symbol: str) -> pd.DataFrame:
-    df = yf.download(symbol, period="1y", interval="1d", auto_adjust=True, progress=False)
+    from fetch_market_history import load_history_frame, to_yahoo
+
+    local = load_history_frame(symbol)
+    if local is not None and not local.empty:
+        return local
+
+    yahoo = to_yahoo(symbol)
+    df = yf.download(yahoo, period="5y", interval="1d", auto_adjust=True, progress=False)
     if df is not None and not df.empty:
         if isinstance(df.columns, pd.MultiIndex):
             close_level = df.columns.get_level_values(0)
@@ -166,12 +171,7 @@ def fetch_price_history(symbol: str) -> pd.DataFrame:
         df = df.dropna().copy()
         df.index = pd.to_datetime(df.index)
         return df
-
-    dates = pd.date_range(end=datetime.today(), periods=252, freq="B")
-    rng = np.random.default_rng(42)
-    random_walk = rng.standard_normal(252).cumsum()
-    prices = random_walk - random_walk[-1] + 100.0
-    return pd.DataFrame({"Close": prices}, index=dates)
+    return pd.DataFrame(columns=["Close"])
 
 
 def load_company_events(news_df: pd.DataFrame, company_name: str) -> pd.DataFrame:
@@ -240,6 +240,9 @@ def build_forecast_note(price_df: pd.DataFrame, events: pd.DataFrame) -> str:
 
 def render_chart(company_name: str, symbol: str, news_df: pd.DataFrame) -> None:
     price_df = fetch_price_history(symbol)
+    if price_df.empty or "Close" not in price_df.columns:
+        print(f"No price history for {symbol}. Chart skipped so a fake series is not shown as a forecast.")
+        return
     events = load_company_events(news_df, company_name)
 
     fig, ax = plt.subplots(figsize=(14, 7))

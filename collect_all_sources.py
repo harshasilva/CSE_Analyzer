@@ -5,9 +5,7 @@ into a single combined CSV/JSON dataset.
 Sources:
 - CSE announcements API
 - CSE tradeSummary (live price snapshots)
-- Ada Derana Biz
-- Daily FT Business
-- EconomyNext
+- EconomyNext and Lanka Business Online business news APIs
 """
 
 from __future__ import annotations
@@ -15,13 +13,13 @@ from __future__ import annotations
 import csv
 import json
 import os
-import re
 import time
 from dataclasses import asdict, dataclass
-from datetime import date, datetime
+from datetime import date
 from typing import Iterable
 import requests
-from bs4 import BeautifulSoup
+
+from cse_common import extract_trade_price, parse_cse_date
 
 
 OUTPUT_DIR = "cse_output"
@@ -31,24 +29,6 @@ COMBINED_CSV = os.path.join(OUTPUT_DIR, "cse_combined_sources.csv")
 # Date range for CSE announcements
 START_YEAR = 2021
 END_YEAR = date.today().year
-
-NEWS_SOURCES = [
-    {
-        "name": "Adaderana Biz",
-        "url": "https://bizenglish.adaderana.lk/",
-        "tags": ["h2", "h3", "h4"],
-    },
-    {
-        "name": "Daily FT Business",
-        "url": "https://www.ft.lk/business/34",
-        "tags": ["h3", "h4"],
-    },
-    {
-        "name": "EconomyNext",
-        "url": "https://economynext.com/",
-        "tags": ["h3", "h4"],
-    },
-]
 
 COMPANY_SYMBOLS = {
     "commercial bank": "COMB.N0000",
@@ -75,20 +55,6 @@ CSE_ENDPOINTS = [
     ("getNewListingsRelatedNoticesAnnouncements", "newListingRelatedAnnouncements", "New Listings Announcements"),
     ("getBuyInBoardAnnouncements", "buyInBoardAnnouncements", "Buy-In Board Announcements"),
     ("getCOVIDAnnouncements", "covidAnnouncements", "COVID Announcements"),
-]
-
-DATE_FORMATS = [
-    "%Y-%m-%d",
-    "%d/%m/%Y",
-    "%d-%m-%Y",
-    "%Y/%m/%d",
-    "%d %b %Y",
-    "%d %B %Y",
-    "%Y-%m-%dT%H:%M:%S",
-    "%Y-%m-%d %H:%M:%S",
-    "%d/%m/%Y %H:%M:%S",
-    "%b %d, %Y",
-    "%B %d, %Y",
 ]
 
 DATE_FIELDS = [
@@ -124,15 +90,7 @@ class CombinedRow:
 
 
 def parse_date(value: str | None) -> date | None:
-    if not value:
-        return None
-    s = str(value).strip()
-    for fmt in DATE_FORMATS:
-        try:
-            return datetime.strptime(s[: len(fmt)], fmt).date()
-        except (ValueError, TypeError):
-            continue
-    return None
+    return parse_cse_date(value)
 
 
 def request_with_backoff(method: str, url: str, max_attempts: int = 3, **kwargs) -> requests.Response | None:
@@ -151,57 +109,25 @@ def request_with_backoff(method: str, url: str, max_attempts: int = 3, **kwargs)
             delay *= 2
 
 
-def extract_date_from_text(text: str) -> date | None:
-    if not text:
-        return None
-    pattern = re.compile(r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},\s+\d{4}")
-    match = pattern.search(text)
-    if match:
-        return parse_date(match.group(0))
-    return None
-
-
 def fetch_news_items() -> list[CombinedRow]:
+    from fetch_business_news import fetch_articles
+
+    articles, notes = fetch_articles()
+    for note in notes:
+        print(note)
     rows: list[CombinedRow] = []
-    headers = {"User-Agent": "Mozilla/5.0"}
-
-    for source in NEWS_SOURCES:
-        resp = request_with_backoff("GET", source["url"], headers=headers, timeout=20)
-        if resp is None:
-            print(f"[!] News fetch failed for {source['name']}")
-            continue
-
-        soup = BeautifulSoup(resp.text, "html.parser")
-        seen = set()
-        for tag in source["tags"]:
-            for h in soup.find_all(tag):
-                a = h.find("a") or h.parent if h.parent and h.parent.name == "a" else None
-                title = h.get_text(strip=True)
-                if not title or len(title) < 10:
-                    continue
-                url = None
-                if a and a.get("href"):
-                    url = a["href"]
-                    if url and url.startswith("/"):
-                        url = source["url"].rstrip("/") + url
-                key = (title, url)
-                if key in seen:
-                    continue
-                seen.add(key)
-
-                parent_text = h.parent.get_text(" ", strip=True) if h.parent else ""
-                published = extract_date_from_text(parent_text)
-                published_str = published.isoformat() if published else None
-                rows.append(
-                    CombinedRow(
-                        source_type="news",
-                        source=source["name"],
-                        title=title,
-                        url=url,
-                        published_date=published_str,
-                        text=parent_text,
-                    )
-                )
+    for article in articles:
+        rows.append(
+            CombinedRow(
+                source_type="news",
+                source=article["source"],
+                title=article["title"],
+                url=article["url"],
+                published_date=article["date"],
+                category=article["category"],
+                text=article["excerpt"] or article["title"],
+            )
+        )
     return rows
 
 
@@ -276,39 +202,36 @@ def fetch_price_snapshots(symbols: Iterable[str]) -> list[CombinedRow]:
         "Accept": "application/json, text/plain, */*",
         "Referer": "https://www.cse.lk/",
         "Origin": "https://www.cse.lk",
+        "X-Requested-With": "XMLHttpRequest",
     }
+    wanted = set(symbols)
+    resp = request_with_backoff(
+        "POST",
+        f"{CSE_BASE_URL}tradeSummary",
+        json={},
+        headers=headers,
+        timeout=20,
+    )
+    if resp is None:
+        print("[!] CSE tradeSummary failed")
+        return rows
 
-    for symbol in symbols:
-        resp = request_with_backoff(
-            "POST",
-            f"{CSE_BASE_URL}tradeSummary",
-            data={"symbol": symbol},
-            headers=headers,
-            timeout=20,
-        )
-        if resp is None:
-            print(f"[!] CSE tradeSummary failed for {symbol}")
+    try:
+        data = resp.json()
+    except Exception as exc:
+        print(f"[!] CSE tradeSummary JSON parse failed: {exc}")
+        return rows
+
+    seen = set()
+    for item in data.get("reqTradeSummery", []) or []:
+        symbol = item.get("symbol")
+        if symbol not in wanted or symbol in seen:
             continue
-
-        try:
-            data = resp.json()
-        except Exception as exc:
-            print(f"[!] CSE tradeSummary JSON parse failed for {symbol}: {exc}")
-            continue
-
-        price = None
-        for item in data.get("reqTradeSummery", []) or []:
-            if item.get("symbol") == symbol and item.get("price"):
-                try:
-                    price = float(item["price"])
-                except (TypeError, ValueError):
-                    price = None
-                break
-
+        price = extract_trade_price(item)
         if price is None:
             print(f"[!] No live price for {symbol}")
             continue
-
+        seen.add(symbol)
         rows.append(
             CombinedRow(
                 source_type="price_snapshot",
@@ -321,6 +244,9 @@ def fetch_price_snapshots(symbols: Iterable[str]) -> list[CombinedRow]:
             )
         )
 
+    missing = wanted - seen
+    for symbol in sorted(missing):
+        print(f"[!] No live price for {symbol}")
     return rows
 
 

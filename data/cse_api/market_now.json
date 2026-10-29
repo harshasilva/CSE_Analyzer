@@ -1,0 +1,309 @@
+{
+  "fetched_at": "2026-10-30T01:13:02+05:30",
+  "marketStatus": {
+    "status": "Market Closed"
+  },
+  "marketSummery": {
+    "id": 37230825,
+    "tradeVolume": 2272085735.25,
+    "shareVolume": 117427861,
+    "tradeDate": 1793266020371,
+    "trades": 20392
+  },
+  "aspiData": {
+    "id": 37237585,
+    "value": 20267.15,
+    "lowValue": 19970.22,
+    "highValue": 20327.66,
+    "change": 296.93,
+    "percentage": 1.4868639404072663,
+    "sectorId": 1.0,
+    "timestamp": 1793266020371
+  },
+  "snpData": {
+    "id": 37237582,
+    "value": 5773.92,
+    "lowValue": 5692.57,
+    "highValue": 5793.78,
+    "change": 81.35,
+    "percentage": 1.43,
+    "sectorId": 40.0,
+    "timestamp": 1793264414484
+  },
+  "topGainers": [
+    {
+      "id": 58323554,
+      "securityId": 5511,
+      "symbol": "AFS.N0000",
+      "price": 23.0,
+      "change": 2.9,
+      "changePercentage": 14.427860696517413,
+      "tradeDate": 1793263809000
+    },
+    {
+      "id": 58325151,
+      "securityId": 554,
+      "symbol": "ACME.N0000",
+      "price": 4.0,
+      "change": 0.5,
+      "changePercentage": 14.285714285714286,
+      "tradeDate": 1793264890000
+    },
+    {
+      "id": 58324351,
+      "securityId": 2091,
+      "symbol": "MEL.N0000",
+      "price": 5.0,
+      "change": 0.6,
+      "changePercentage": 13.636363636363637,
+      "tradeDate": 1793264286000
+    },
+    {
+      "id": 58325126,
+      "securityId": 1849,
+      "symbol": "SHL.N0000",
+      "price": 7.1,
+      "change": 0.8,
+      "changePercentage": 12.698412698412698,
+      "tradeDate": 1793264615000
+    },
+    {
+      "id": 58325174,
+      "securityId": 1944,
+      "symbol": "SCAP.N0000",
+      "price": 9.2,
+      "change": 0.9,
+      "changePercentage": 10.843373493975903,
+      "tradeDate": 1793265047000
+    },
+    {
+      "id": 58325055,
+      "securityId": 701,
+      "symbol": "RHL.N0000",
+      "price": 36.6,
+      "change": 3.5,
+      "changePercentage": 10.574018126888218,
+      "tradeDate": 1793264506000
+    },
+    {
+      "id": 58325165,
+      "securityId": 461,
+      "symbol": "KZOO.N0000",
+      "price": 7.4,
+      "change": 0.7,
+      "changePercentage": 10.447761194029852,
+      "tradeDate": 1793265191000
+    },
+    {
+      "id": 58325167,
+      "securityId": 5173,
+      "symbol": "EML.N0000",
+      "price": 7.4,
+      "change": 0.7,
+      "changePercentage": 10.447761194029852,
+      "tradeDate": 1793264817000
+    },
+    {
+      "id": 58324482,
+      "securityId": 25,
+      "symbol": "BRWN.N0000",
+      "price": 119.25,
+      "change": 11.0,
+      "changePercentage": 10.161662817551964,
+      "tradeDate": 1793264575000
+    },
+    {
+      "id": 58325107,
+      "securityId": 504,
+      "symbol": "PEG.N0000",
+      "price": 18.4,
+      "change": 1.6,
+      "changePercentage": 9.523809523809524,
+      "tradeDate": 1793265175000
+    }
+  ],
+  "topLooses": [
+    {
+      "id": 58322895,
+      "securityId": 2997,
+      "symbol": "TESS.X0000",
+      "price": 1.3,
+      "change": -0.1,
+      "changePercentage": -7.142857142857143,
+      "tradeDate": 1793262977000
+    },
+    {
+      "id": 58324124,
+      "securityId": 3575,
+      "symbol": "ATLL.N0000",
+      "price": 18.5,
+      "change": -1.3,
+      "changePercentage": -6.565656565656566,
+      "tradeDate": 1793263920000
+    },
+    {
+      "id": 58325130,
+      "securityId": 383,
+      "symbol": "CHOT.N0000",
+      "price": 27.8,
+      "change": -1.9,
+      "changePercentage": -6.397306397306397,
+      "tradeDate": 1793264867000
+    },
+    {
+      "id": 58322960,
+      "securityId": 153,
+      "symbol": "SING.N0000",
+      "price": 49.5,
+      "change": -3.1,
+      "changePercentage": -5.893536121673004,
+      "tradeDate": 1793263496000
+    },
+    {
+      "id": 58324643,
+      "securityId": 137,
+      "symbol": "LPRT.N0000",
+      "price": 513.25,
+      "change": -26.75,
+      "changePercentage": -4.953703703703703,
+      "tradeDate": 1793264419000
+    },
+    {
+      "id": 58325030,
+      "securityId": 4562,
+      "symbol": "LPL.X0000",
+      "price": 8.3,
+      "change": -0.4,
+      "changePercentage": -4.597701149425287,
+      "tradeDate": 1793265316000
+    },
+    {
+      "id": 58321922,
+      "securityId": 546,
+      "symbol": "LDEV.N0000",
+      "price": 15.7,
+      "change": -0.7,
+      "changePercentage": -4.2682926829268295,
+      "tradeDate": 1793262088000
+    },
+    {
+      "id": 58325076,
+      "securityId": 403,
+      "symbol": "EAST.N0000",
+      "price": 65.8,
+      "change": -2.1,
+      "changePercentage": -3.0927835051546393,
+      "tradeDate": 1793264767000
+    },
+    {
+      "id": 58325158,
+      "securityId": 300,
+      "symbol": "VLL.N0000",
+      "price": 21.5,
+      "change": -0.6,
+      "changePercentage": -2.7149321266968327,
+      "tradeDate": 1793265270000
+    },
+    {
+      "id": 58323671,
+      "securityId": 460,
+      "symbol": "ECL.N0000",
+      "price": 14.6,
+      "change": -0.4,
+      "changePercentage": -2.6666666666666665,
+      "tradeDate": 1793263753000
+    }
+  ],
+  "mostActiveTrades": [
+    {
+      "id": 58325161,
+      "securityId": 1784,
+      "symbol": "PAP.N0000",
+      "tradeVolume": 709.0,
+      "shareVolume": 6095322.0,
+      "turnover": 71543238.9,
+      "percentageShareVolume": 6.25
+    },
+    {
+      "id": 58324880,
+      "securityId": 297,
+      "symbol": "JKH.N0000",
+      "tradeVolume": 500.0,
+      "shareVolume": 3890229.0,
+      "turnover": 69720097.2,
+      "percentageShareVolume": 1.6853932584269662
+    },
+    {
+      "id": 58325165,
+      "securityId": 461,
+      "symbol": "KZOO.N0000",
+      "tradeVolume": 412.0,
+      "shareVolume": 2624015.0,
+      "turnover": 19182542.1,
+      "percentageShareVolume": 10.447761194029852
+    },
+    {
+      "id": 58325139,
+      "securityId": 1485,
+      "symbol": "RAL.N0000",
+      "tradeVolume": 412.0,
+      "shareVolume": 2022438.0,
+      "turnover": 19468025.5,
+      "percentageShareVolume": 3.225806451612903
+    },
+    {
+      "id": 58325108,
+      "securityId": 266,
+      "symbol": "SAMP.N0000",
+      "tradeVolume": 396.0,
+      "shareVolume": 274963.0,
+      "turnover": 39162384.0,
+      "percentageShareVolume": 2.3339317773788153
+    },
+    {
+      "id": 58325048,
+      "securityId": 1798,
+      "symbol": "COCR.N0000",
+      "tradeVolume": 371.0,
+      "shareVolume": 284070.0,
+      "turnover": 26379311.1,
+      "percentageShareVolume": 1.198257080610022
+    },
+    {
+      "id": 58325128,
+      "securityId": 162,
+      "symbol": "CIC.N0000",
+      "tradeVolume": 361.0,
+      "shareVolume": 1274309.0,
+      "turnover": 33436937.2,
+      "percentageShareVolume": 1.1627906976744187
+    },
+    {
+      "id": 58325014,
+      "securityId": 471,
+      "symbol": "DIAL.N0000",
+      "tradeVolume": 351.0,
+      "shareVolume": 290437.0,
+      "turnover": 12849939.6,
+      "percentageShareVolume": 1.839080459770115
+    },
+    {
+      "id": 58324595,
+      "securityId": 267,
+      "symbol": "DOCK.N0000",
+      "tradeVolume": 345.0,
+      "shareVolume": 275139.0,
+      "turnover": 27517383.2,
+      "percentageShareVolume": 3.6082474226804124
+    },
+    {
+      "id": 58325148,
+      "securityId": 208,
+      "symbol": "COMB.N0000",
+      "tradeVolume": 340.0,
+      "shareVolume": 680953.0,
+      "turnover": 135892641.5,
+      "percentageShareVolume": 0.25125628140703515
+    }
+  ]
+}

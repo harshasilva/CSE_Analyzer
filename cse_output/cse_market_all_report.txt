@@ -1,0 +1,82 @@
+CSE full-market five-session model
+
+Each row predicts the percent change from this close to the close 5 sessions later.
+Training and the forecast use only sessions that closed at 5 or above and traded at least 1000 shares.
+A percent is published only when that percent and the up/down model agree, and the chance of a rise is at least 60% or at most 40%.
+Other liquid stocks stay unclear, with no future price.
+A published percent is shown with a band of ±2.960 points, the average miss on published test calls.
+The last four sessions have no completed five-session outcome yet, so they are not in the test score.
+Headlines count only when they name a listed company. Tone comes from FinBERT (ProsusAI/finbert).
+Official closes are kept in data/cse_market_all_archive.csv. A CSE chart download is still about one year; older days remain in the archive.
+The test period is the later part of the liquid history. Those days were not used for training.
+
+Prices: 67806 rows, 288 symbols, 2025-10-31 to 2026-10-29
+Archive rows on disk: 67806
+Symbols with fewer than 40 sessions, left out: 0
+Liquid sessions: 52445 rows, 278 symbols
+Thin sessions left out of training and the forecast: 15361
+Company headlines scored: 387
+Headlines with no listed company, left out: 14863
+Undated company headlines, kept out of training: 2
+Split or bad-print days removed: 48
+
+Train: 36567 rows, 277 symbols, 2025-12-01 to 2026-08-19
+Test:  8621 rows, 266 symbols, 2026-08-20 to 2026-10-22
+Published calls inside the test: 5868 of 8621
+
+All liquid test rows:
+Average miss: 2.981 percentage points
+Average miss if the model always says 0: 2.842 percentage points
+Direction accuracy: 62.0%
+Direction accuracy of always guessing the common side: 70.5%
+The size of the predicted move missed by at least as much as a no-change forecast.
+The direction call stayed within two points of always guessing the more common side, or trailed it.
+Direction accuracy of 'same way as yesterday': 52.9%
+
+Published calls only, unclear days left out:
+Average miss: 2.960 percentage points
+Average miss if the model always says 0: 2.822 percentage points
+Direction accuracy: 64.9%
+Direction accuracy of always guessing the common side: 71.9%
+The size of the predicted move missed by at least as much as a no-change forecast.
+The direction call stayed within two points of always guessing the more common side, or trailed it.
+
+Judge a published percent by the published-call numbers above.
+
+Features that mattered most on the test sample:
+  ret_1: 0.0045
+  dist_low_252: 0.0033
+  vol_20: 0.0024
+  rsi_14: 0.0021
+  vol_10: 0.0013
+  ret_5: 0.0003
+  report_count_5d: 0.0000
+  company_count_5d: 0.0000
+
+Strongest up calls for the next 5 sessions:
+
+  HAYC.N0000 HAYCARB PLC: close 202.75 on 2026-10-29, next 5 sessions +7.347% (range +4.387% to +10.307%, up probability 91%)
+  HEXP.N0000 HAYLEYS FIBRE PLC: close 139.25 on 2026-10-29, next 5 sessions +7.186% (range +4.226% to +10.146%, up probability 75%)
+  RAL.N0000 RENUKA AGRI FOODS PLC: close 9.60 on 2026-10-29, next 5 sessions +6.586% (range +3.626% to +9.546%, up probability 81%)
+  GEST.N0000 GESTETNER OF CEYLON PLC: close 291.50 on 2026-10-29, next 5 sessions +6.389% (range +3.429% to +9.349%, up probability 87%)
+  LUMX.N0000 LUMINEX PLC: close 7.30 on 2026-10-29, next 5 sessions +6.081% (range +3.121% to +9.041%, up probability 86%)
+  CONN.N0000 HAYLEYS LEISURE PLC: close 22.90 on 2026-10-29, next 5 sessions +5.920% (range +2.960% to +8.880%, up probability 89%)
+  LDEV.N0000 LANKEM DEVELOPMENTS PLC: close 15.70 on 2026-10-29, next 5 sessions +5.763% (range +2.803% to +8.723%, up probability 88%)
+  LITE.N0000 LAXAPANA PLC: close 41.30 on 2026-10-29, next 5 sessions +5.683% (range +2.723% to +8.643%, up probability 89%)
+  TAJ.N0000 TAL LANKA HOTELS PLC: close 25.10 on 2026-10-29, next 5 sessions +5.535% (range +2.575% to +8.495%, up probability 89%)
+  MCPL.N0000 MAHAWELI COCONUT PLANTATIONS PLC: close 42.40 on 2026-10-29, next 5 sessions +5.428% (range +2.468% to +8.388%, up probability 83%)
+  SINH.N0000 SINGHE HOSPITALS PLC: close 22.30 on 2026-10-29, next 5 sessions +5.293% (range +2.333% to +8.253%, up probability 62%)
+  DIAL.N0000 DIALOG AXIATA PLC: close 44.30 on 2026-10-29, next 5 sessions +5.261% (range +2.301% to +8.221%, up probability 84%)
+
+Strongest down calls for the next 5 sessions:
+
+  SHL.N0000 SOFTLOGIC HOLDINGS PLC: close 7.10 on 2026-10-29, next 5 sessions -3.990% (range -6.950% to -1.030%, up probability 30%)
+  KPHL.N0000 KAPRUKA HOLDINGS PLC: close 17.70 on 2026-10-29, next 5 sessions -1.339% (range -4.299% to +1.621%, up probability 40%)
+  AFS.N0000 ALPHA FIRE SERVICES PLC: close 23.00 on 2026-10-29, next 5 sessions -1.120% (range -4.080% to +1.840%, up probability 39%)
+
+Full forecast for 206 liquid symbols (185 with a published percent): C:\Users\lap.lk\Desktop\CSE\cse_output\cse_market_all_forecast.csv
+This is a research model, not a trading instruction.
+
+Undated company headlines and their FinBERT tone:
+  [neutral] EconomyNext: Laugfs power commissions 2MW mini hydro power plant in Deniyaya, Sri Lanka
+  [neutral] EconomyNext: People's Leasing & Finance Rs10bn debt issue rated BBB+ by Fitch

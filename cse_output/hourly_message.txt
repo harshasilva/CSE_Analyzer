@@ -1,0 +1,74 @@
+CSE hourly outlook
+Fri 30 Oct 2026, 01:05 Colombo
+
+Research only. Not a trading instruction.
+
+CSE: Market Closed
+ASPI 20,267.15 (+1.49%)
+S&P SL20 5,773.92 (+1.43%)
+
+GOOD future — BUY
+Hatton National Bank (HNB.N0000)
+Live 382.75 LKR, today +2.13%
+Next close about 386.50 (+0.98%, up chance 65%)
+Buy limit: 382.75 LKR
+Sell limit: 386.50 LKR
+CSE quote: beta 0.55, -16.8% vs 52-week high
+
+GOOD future — BUY
+Commercial Bank (COMB.N0000)
+Live 199.50 LKR, today +0.25%
+Next close about 201.18 (+0.84%, up chance 57%)
+Buy limit: 199.50 LKR
+Sell limit: 201.18 LKR
+CSE quote: beta 0.79, -15.2% vs 52-week high
+
+UNCLEAR future — WAIT
+Dialog Axiata (DIAL.N0000)
+Live 44.30 LKR, today +1.84%
+Next close about 44.59 (+0.66%, up chance 55%)
+Buy limit: 43.86 LKR
+Sell limit: 44.74 LKR
+CSE quote: beta 1.40, -11.2% vs 52-week high
+
+UNCLEAR future — WAIT
+Sampath Bank (SAMP.N0000)
+Live 142.50 LKR, today +2.33%
+Next close about 143.77 (+0.89%, up chance 50%)
+Buy limit: 141.07 LKR
+Sell limit: 143.93 LKR
+CSE quote: beta 0.68, -14.7% vs 52-week high
+
+UNCLEAR future — WAIT
+John Keells Holdings (JKH.N0000)
+Live 18.10 LKR, today +1.69%
+Next close about 18.28 (+1.02%, up chance 48%)
+Buy limit: 17.92 LKR
+Sell limit: 18.28 LKR
+CSE quote: beta 1.00, -22.6% vs 52-week high
+
+Buy limit = highest price to buy. Sell limit = lowest price to sell.
+Price model uses daily closes through 2026-10-29.
+
+Live news and CSE market
+Headlines this hour: 40. Used for the news score: 21.
+CSE announcements in the last two days: 0.
+After similar old headlines, the next session averaged:
+  Commercial Bank: +0.18% (21 headlines)
+  Dialog Axiata: +0.18% (21 headlines)
+  Hatton National Bank: +0.18% (21 headlines)
+  John Keells Holdings: +0.18% (21 headlines)
+  Sampath Bank: +0.18% (21 headlines)
+Latest headlines:
+  [Sri Lanka] neutral, old similar news +0.62%
+    EconomyNext: Sri Lanka rupee closes at 332.55/65 to US dollar spot 1 week, bond yields steady
+  [Sri Lanka] neutral, old similar news +0.62%
+    EconomyNext: Sri Lanka suffers foreign selling in rupee bonds after three weekly buying
+  [World] negative, old similar news +0.48%
+    BBC World: Flávio Bolsonaro calls himself 'leader of Brazil' after election loss
+  [World] neutral, old similar news +0.20%
+    BBC World: Russian drone attack on Ukrainian train station kills at least 14, officials say
+  [World] neutral, old similar news +0.20%
+    RV PRO: Federal Reserve Leaves Rates Unchanged, Awaits More Information
+  [World] neutral, old similar news +0.20%
+    www.tokenpost.com: Federal Reserve Holds Rates at 3.75% to 4% in 10-2 Vote
